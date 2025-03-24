@@ -7,8 +7,7 @@ const vehiculoSchema = z.object({
   riesgo_id: z.number().int().positive(),
   capacidad: z.number().int().positive(),
   anno: z.number().int().positive(),
-  valoracion: z.number().positive(),
-  ultima_actualizacion: z.date().optional(),
+  valoracion: z.number().positive()
 });
 
 export function validateVehiculo(input) {

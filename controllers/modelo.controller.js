@@ -1,0 +1,85 @@
+import { validateModelo } from "../schemas/modelo.schema.js";
+
+export default class ModeloController {
+  constructor({modeloModel, marcaModel}) {
+    this.modeloModel = modeloModel;
+    this.marcaModel = marcaModel;
+  }
+
+  getAll = async (req, res) => {
+    const modelos = await this.modeloModel.getAll();
+
+    res.json(modelos);
+  };
+
+  getById = async (req, res) => {
+    const { id } = req.params;
+
+    const modelo = await this.modeloModel.getById(id);
+
+    res.json(modelo);
+  }
+
+  create = async (req, res) => {
+    const newModelo = validateModelo(req.body);
+
+    if (!newModelo.success) {
+      return res.status(400).json({error: newModelo.error});
+    }
+
+    const modeloExits = await this.modeloModel.getByNombre(newModelo.data.nombre);
+
+    if (modeloExits.length > 0) {
+      return res.status(400).json({error: "El modelo ya existe"});
+    }
+
+    const marca = await this.marcaModel.getById(newModelo.data.marca_id);
+
+    if (marca.length === 0) {
+      return res.status(400).json({error: "La marca no existe"});
+    }
+
+    const result = await this.modeloModel.create({ input: newModelo.data });
+
+    if (!result.success) {
+      return res.status(400).json({error: "Error creating modelo"});
+    }
+
+    res.status(200).json(result.data);
+  }
+
+  update = async (req, res) => {
+    const { id } = req.params;
+    const newModelo = validateModelo(req.body);
+
+    if (!newModelo.success) {
+      return res.status(400).json({error: newModelo.error});
+    }
+
+    const modeloExits = await this.modeloModel.getByNombreAndNotId(newModelo.data.nombre, id);
+
+    if (modeloExits.length > 0) {
+      return res.status(400).json({error: "Ya existe un modelo con este nombre"});
+    }
+
+    const result = await this.modeloModel.update({ id, input: newModelo.data });
+
+    if (!result ) {
+      return res.status(400).json({error: "Error updating modelo"});
+    }
+
+    res.status(200).json({success: true});
+  }
+
+  delete = async (req, res) => {
+    const { id } = req.params;
+
+    const result = await this.modeloModel.delete(id);
+
+    if (!result) {
+      return res.status(400).json({error: "Error deleting modelo"});
+    }
+
+    res.json({success: true});
+  }
+}

@@ -3,7 +3,7 @@ import z from "zod";
 const primaSchema = z.object({
   poliza_id: z.number().int().positive(),
   monto: z.number().positive(),
-  fecha: z.date(),
+  fecha: z.string().date(),
 });
 
 export function validatePrima(input) {
