@@ -1,8 +1,10 @@
-import { validateReparacion } from "../schemas/reparacion.schema";
+import { validatePartialReparacion, validateReparacion } from "../schemas/reparacion.schema.js";
 
-export default class reparacionController {
-  constructor({ reparacionModel }) {
+export default class ReparacionController {
+  constructor({ reparacionModel, indemnizacionModel, tallerModel }) {
     this.reparacionModel = reparacionModel;
+    this.indemnizacionModel = indemnizacionModel;
+    this.tallerModel = tallerModel;
   }
 
   getAll = async (req, res) => {
@@ -16,6 +18,13 @@ export default class reparacionController {
     const reparacion = await this.reparacionModel.getById(id);
 
     res.json(reparacion);
+  }
+
+  getByTaller = async (req, res) => {
+    const { rif } = req.params;
+    const reparaciones = await this.reparacionModel.getByTaller(rif);
+
+    res.json(reparaciones);
   }
 
   getByIndemnizacion = async (req, res) => {
@@ -32,6 +41,18 @@ export default class reparacionController {
       return res.status(400).json({error: newReparacion.error});
     }
 
+    const indemnizacionExist = await this.indemnizacionModel.getById(newReparacion.data.indemnizacion_id);
+
+    if (!indemnizacionExist) {
+      return res.status(400).json({ error: "Indemnizacion no existe" });
+    }
+
+    const tallerExist = await this.tallerModel.getByRif(newReparacion.data.taller_rif);
+
+    if (!tallerExist) {
+      return res.status(400).json({ error: "Taller no existe" });
+    }
+
     const result = await this.reparacionModel.create(newReparacion.data);
 
     if (result.success) {
@@ -43,11 +64,17 @@ export default class reparacionController {
 
   update = async (req, res) => {
     const { id } = req.params;
-    const reparacion = req.body;
+    const reparacion = validatePartialReparacion(req.body);
+
+    if (!reparacion.success) {
+      return res.status(400).json({ error: reparacion.error
+      });
+    }
+
     const result = await this.reparacionModel.update(id, reparacion);
 
     if (result) {
-      res.json({ message: "Reparacion actualizada" });
+      res.json({ success: true });
     } else {
       res.status(500).json({ message: "Error al actualizar la reparacion" });
     }

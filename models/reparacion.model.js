@@ -1,6 +1,6 @@
 import { turso } from "./connection/dbConnection";
 
-export default class reparacionModel {
+export default class ReparacionModel {
   async getAll() {
     const result = await turso.execute("SELECT * FROM reparacion");
 
@@ -11,6 +11,12 @@ export default class reparacionModel {
     const result = await turso.execute("SELECT * FROM reparacion WHERE id = ?", [id]);
 
     return result.rows[0];
+  }
+
+  async getByTaller(taller_rif) {
+    const result = await turso.execute("SELECT * FROM reparacion WHERE taller_rif = ?", [taller_rif]);
+
+    return result.rows;
   }
 
   async getByIndemnizacion(id) {

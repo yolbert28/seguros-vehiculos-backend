@@ -1,8 +1,9 @@
 import { validatePartialRepuestoSiniestro, validateRepuestoSiniestro } from "../schemas/repuestoSiniestro.schema.js";
 
 export default class RepuestoSiniestroController {
-  constructor({ repuestoSiniestroModel }) {
+  constructor({ repuestoSiniestroModel, inspeccionSiniestroModel }) {
     this.repuestoSiniestroModel = repuestoSiniestroModel;
+    this.inspeccionSiniestroModel = inspeccionSiniestroModel;
   }
 
   getAll = async (req, res) => {
@@ -30,6 +31,12 @@ export default class RepuestoSiniestroController {
 
     if (!newRepuestoSiniestro.success) {
       return res.status(400).json({ error: newRepuestoSiniestro.error })
+    }
+
+    const inspeccionExist = await this.inspeccionSiniestroModel.getById(newRepuestoSiniestro.data.inspeccion_siniestro_id);
+
+    if (!inspeccionExist) {
+      return res.status(400).json({ error: "Inspeccion no existe" })
     }
 
     const nombreExits = await this.repuestoSiniestroModel.getByNombreAndInspeccion(newRepuestoSiniestro.data.nombre, newRepuestoSiniestro.data.inspeccion_siniestro_id);
