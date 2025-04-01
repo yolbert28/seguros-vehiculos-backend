@@ -11,6 +11,8 @@ export default function createPolizaRouter({polizaModel,empleadoModel}){
   route.post("/", polizaController.create);
   route.put("/:id", polizaController.update);
   route.delete("/:id", polizaController.delete);
+  route.post("/:id/:servicioId", polizaController.addServicio);
+  route.delete("/:id/:servicioId", polizaController.removeServicio);
 
   return route;
 }

@@ -1,12 +1,23 @@
+import { turso } from "./connection/dbConnection.js";
+
 export default class CoberturaServicioModel {
+
+  static async getById(coberturaId, servicioId) {
+    const result = await turso.execute("SELECT * FROM cobertura_servicio WHERE cobertura_id = ? AND servicio_id = ?",
+      [coberturaId, servicioId]
+    )
+
+    return result.rows;
+  }
+
   static async create(coberturaServicio) {
 
     const { cobertura_id, servicio_id } = coberturaServicio;
 
     try {
       await turso.execute(
-      "INSERT INTO cobertura_servicio (cobertura_id, servicio_id ) VALUES (?,?)",
-      [cobertura_id, servicio_id ]);
+        "INSERT INTO cobertura_servicio (cobertura_id, servicio_id ) VALUES (?,?)",
+        [cobertura_id, servicio_id]);
       return true;
     } catch (e) {
       console.error(e);
@@ -14,7 +25,10 @@ export default class CoberturaServicioModel {
     }
   }
 
-  static async delete(cobertura_id, servicio_id){
+  static async delete(coberturaServicio) {
+
+    const { cobertura_id, servicio_id } = coberturaServicio;
+    
     try {
       await turso.execute(
         "DELETE FROM cobertura_servicio WHERE cobertura_id = ? AND servicio_id = ?",

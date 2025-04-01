@@ -1,9 +1,10 @@
 import { validatePoliza } from "../schemas/poliza.schema.js";
 
 export default class PolizaController {
-  constructor({ polizaModel, empleadoModel }) {
+  constructor({ polizaModel, empleadoModel, polizaServicioModel }) {
     this.polizaModel = polizaModel;
     this.empleadoModel = empleadoModel;
+    this.polizaServicioModel = polizaServicioModel;
   }
 
   getAll = async (req, res) => {
@@ -29,11 +30,11 @@ export default class PolizaController {
 
     const empleadoExist = await this.empleadoModel.getById(newPoliza.data.asesor_doc);
 
-    if(!empleadoExist) {
+    if (!empleadoExist) {
       return res.status(400).json({ error: "El empleado no existe" });
     }
 
-    if(empleadoExist.tipo_empleado_id !== 2) {
+    if (empleadoExist.tipo_empleado_id !== 2) {
       return res.status(400).json({ error: "El empleado no es un asesor" });
     }
 
@@ -56,11 +57,11 @@ export default class PolizaController {
 
     const empleadoExist = await this.empleadoModel.getById(updatePoliza.data.asesor_doc);
 
-    if(!empleadoExist) {
+    if (!empleadoExist) {
       return res.status(400).json({ error: "El empleado no existe" });
     }
 
-    if(empleadoExist.tipo_empleado_id !== 2) {
+    if (empleadoExist.tipo_empleado_id !== 2) {
       return res.status(400).json({ error: "El empleado no es un asesor" });
     }
 
@@ -71,6 +72,40 @@ export default class PolizaController {
     }
 
     return res.status(200).json({ success: true });
+  }
+
+  addServicio = async (req, res) => {
+    const { id, servicioId } = req.params
+
+    const polizaServicioExist = await this.polizaServicioModel.getById(id, servicioId);
+
+    if (polizaServicioExist) {
+      return res.status(400).json({ success: true, error: "La poliza ya contiene este servicio" })
+    }
+
+    const result = await this.polizaServicioModel.create({ poliza_id: id, servicio_id: servicioId })
+
+    if (result)
+      return res.status(500).json({ success: true, error: "Error al agregar el servicio a la poliza" })
+
+    res.status(200).json({ success: true })
+  }
+
+  removeServicio = async (req, res) => {
+    const { id, servicioId } = req.params
+
+    const polizaServicioExist = await this.polizaServicioModel.getById(id, servicioId);
+
+    if (!polizaServicioExist) {
+      return res.status(400).json({ success: true, error: "El servicio no se encuentra dentro de la poliza" })
+    }
+
+    const result = await this.polizaServicioModel.delete({ poliza_id: id, servicio_id: servicioId })
+
+    if (result)
+      return res.status(500).json({ success: true, error: "Error al remover el servicio de la poliza" })
+
+    res.status(200).json({ success: true })
   }
 
   delete = async (req, res) => {

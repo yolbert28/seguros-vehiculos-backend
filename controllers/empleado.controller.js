@@ -1,5 +1,7 @@
+import { validateCredenciales } from "../schemas/credenciales.schema.js";
 import { validateEmpleado, validatePartialEmpleado } from "../schemas/empleado.schema.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export default class EmpleadoController {
   constructor({ empleadoModel }) {
@@ -77,7 +79,7 @@ export default class EmpleadoController {
       return res.status(500).json({ error: "Error al actualizar empleado" });
     }
 
-    return res.status(200).json({success: true});
+    return res.status(200).json({ success: true });
   }
 
   delete = async (req, res) => {
@@ -92,6 +94,34 @@ export default class EmpleadoController {
     const result = await this.empleadoModel.delete(documento);
 
     return res.status(200).json({ sucess: result });
+  }
+
+  login = async (req, res) => {
+    const credentials = validateCredenciales(req.body);
+
+    if (!credentials.success) {
+      return res.status(400).json({ success: false, error: credentials.error });
+    }
+
+    const { documento, contrasena } = credentials.data;
+
+    const user = await this.empleadoModel.getContrasena(documento);
+
+    if (!user) {
+      return res.status(400).json({ success: false, error: "Credenciales invalidas" });
+    }
+
+    const isMatch = await bcrypt.compare(contrasena, user.contrasena);
+
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ success: false, error: "Credenciales invalidas" });
+    }
+
+    const token = jwt.sign({ documento: documento }, process.env.JWT_SECRET, { expiresIn: 14400 });
+
+    return res.status(200).json({ token });
   }
 
   changePassword = async (req, res) => {
@@ -110,7 +140,7 @@ export default class EmpleadoController {
     const result = await this.empleadoModel.changePassword(documento, hashedPassword);
 
     if (!result) {
-      return res.status(500).json({ error: "Error al cambiar contraseña"});
+      return res.status(500).json({ error: "Error al cambiar contraseña" });
     }
 
     return res.status(200).json({ sucess: result });

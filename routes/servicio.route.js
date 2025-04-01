@@ -11,6 +11,8 @@ export default function createServicioRouter({ servicioModel }) {
   router.post("/", servicioController.create);
   router.put("/:id", servicioController.update);
   router.delete("/:id", servicioController.delete);
+  router.post("/:id/:coberturaId", servicioController.addCobertura());
+  router.delete("/:id/:coberturaId", servicioController.removeCobertura());
 
   return router;
 }

@@ -45,7 +45,7 @@ import indemnizacionModel from './models/indemnizacion.model.js';
 import inspeccionIndemnizacionModel from './models/inspeccionIndemnizacion.model.js';
 import inspeccionSiniestroModel from './models/inspeccionSiniestro.model.js';
 import repuestoReparacionModel from './models/repuestoReparacion.model.js';
-import { corsMiddleware } from './middlewares/cors.js';
+import { corsMiddleware } from './middlewares/cors.middleware.js';
 
 const app = express();
 

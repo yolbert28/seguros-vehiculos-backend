@@ -1,8 +1,9 @@
-import { validateServicio } from "../schemas/servicio.schema.js"; 
+import { validateServicio } from "../schemas/servicio.schema.js";
 
 export default class ServicioController {
-  constructor({ servicioModel }) {
+  constructor({ servicioModel, coberturaServicioModel }) {
     this.servicioModel = servicioModel;
+    this.coberturaServicioModel = coberturaServicioModel;
   }
 
   getAll = async (req, res) => {
@@ -38,7 +39,7 @@ export default class ServicioController {
 
     const result = await this.servicioModel.create({ input: newServicio.data });
 
-    if(!result.success) {
+    if (!result.success) {
       return res.status(400).json({
         success: false, error: "Error al crear servicio"
       });
@@ -67,7 +68,7 @@ export default class ServicioController {
 
     const result = await this.servicioModel.update({ id, input: newServicio.data });
 
-    if(!result) {
+    if (!result) {
       return res.status(400).json({
         success: false, error: "Error al actualizar servicio"
       });
@@ -76,12 +77,46 @@ export default class ServicioController {
     res.json({ success: true });
   }
 
+  addCobertura = async (req, res) => {
+    const { id, coberturaId } = req.params
+
+    const coberturaServicioExist = await this.coberturaServicioModel.getById(id, coberturaId);
+
+    if (coberturaServicioExist) {
+      return res.status(400).json({ success: false, error: "La cobertura ya se encuentra registrada en el servicio" })
+    }
+
+    const result = await this.coberturaServicioModel.create({ cobertura_id: coberturaId, servicio_id: id })
+
+    if (result)
+      return res.status(500).json({ success: false, error: "No se pudo agregar la cobertura al servicio" })
+
+    res.status(200).json({ success: true })
+  }
+
+  removeCobertura = async (req, res) => {
+    const { id, coberturaId } = req.params
+
+    const coberturaServicioExist = await this.coberturaServicioModel.getById(id, coberturaId);
+
+    if (!coberturaServicioExist) {
+      return res.status(400).json({ success: false, error: "Esta cobertura no se encuentra registrada al servicio" })
+    }
+
+    const result = await this.coberturaServicioModel.delete({ cobertura_id: coberturaId, servicio_id: id })
+
+    if (result)
+      return res.status(500).json({ success: false, error: "No se pudo remover la cobertura del servicio" })
+
+    res.status(200).json({ success: true })
+  }
+
   delete = async (req, res) => {
     const { id } = req.params;
 
     const result = await this.servicioModel.delete(id);
 
-    if(!result) {
+    if (!result) {
       return res.status(500).json({ success: false, error: "Error al eliminar el servicio" });
     }
 
