@@ -1,9 +1,10 @@
 import { validateServicio } from "../schemas/servicio.schema.js";
 
 export default class ServicioController {
-  constructor({ servicioModel, coberturaServicioModel }) {
+  constructor({ servicioModel, coberturaServicioModel, polizaServicioModel }) {
     this.servicioModel = servicioModel;
     this.coberturaServicioModel = coberturaServicioModel;
+    this.polizaServicioModel = polizaServicioModel;
   }
 
   getAll = async (req, res) => {
@@ -113,6 +114,18 @@ export default class ServicioController {
 
   delete = async (req, res) => {
     const { id } = req.params;
+
+    const hasCoberturaServicio = await this.coberturaServicioModel.getByCobertura(id)
+
+    if (hasCoberturaServicio) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar porque tiene coberturas agregadas" })
+    }
+
+    const hasPolizaServicio = await this.polizaServicioModel.getByServicio(id);
+
+    if (hasPolizaServicio) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar porque se encuentra siendo utilizado por algunas polizas" })
+    }
 
     const result = await this.servicioModel.delete(id);
 

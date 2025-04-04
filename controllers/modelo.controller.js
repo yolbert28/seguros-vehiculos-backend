@@ -1,9 +1,10 @@
 import { validateModelo } from "../schemas/modelo.schema.js";
 
 export default class ModeloController {
-  constructor({modeloModel, marcaModel}) {
+  constructor({ modeloModel, marcaModel, vehiculoModel }) {
     this.modeloModel = modeloModel;
     this.marcaModel = marcaModel;
+    this.vehiculoModel = vehiculoModel;
   }
 
   getAll = async (req, res) => {
@@ -24,25 +25,25 @@ export default class ModeloController {
     const newModelo = validateModelo(req.body);
 
     if (!newModelo.success) {
-      return res.status(400).json({error: newModelo.error});
+      return res.status(400).json({ error: newModelo.error });
     }
 
     const modeloExits = await this.modeloModel.getByNombre(newModelo.data.nombre);
 
     if (modeloExits.length > 0) {
-      return res.status(400).json({error: "El modelo ya existe"});
+      return res.status(400).json({ error: "El modelo ya existe" });
     }
 
     const marca = await this.marcaModel.getById(newModelo.data.marca_id);
 
     if (marca.length === 0) {
-      return res.status(400).json({error: "La marca no existe"});
+      return res.status(400).json({ error: "La marca no existe" });
     }
 
     const result = await this.modeloModel.create({ input: newModelo.data });
 
     if (!result.success) {
-      return res.status(400).json({error: "Error creating modelo"});
+      return res.status(400).json({ error: "Error creating modelo" });
     }
 
     res.status(200).json(result.data);
@@ -53,33 +54,39 @@ export default class ModeloController {
     const newModelo = validateModelo(req.body);
 
     if (!newModelo.success) {
-      return res.status(400).json({error: newModelo.error});
+      return res.status(400).json({ error: newModelo.error });
     }
 
     const modeloExits = await this.modeloModel.getByNombreAndNotId(newModelo.data.nombre, id);
 
     if (modeloExits.length > 0) {
-      return res.status(400).json({error: "Ya existe un modelo con este nombre"});
+      return res.status(400).json({ error: "Ya existe un modelo con este nombre" });
     }
 
     const result = await this.modeloModel.update({ id, input: newModelo.data });
 
-    if (!result ) {
-      return res.status(400).json({error: "Error updating modelo"});
+    if (!result) {
+      return res.status(400).json({ error: "Error updating modelo" });
     }
 
-    res.status(200).json({success: true});
+    res.status(200).json({ success: true });
   }
 
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const vehiculoExist = await this.vehiculoModel.getByModelo(id);
+
+    if (vehiculoExist) {
+      return res.status(400).json({ success: false, error: "Existen vehiculos con este modelo registrado" })
+    }
+
     const result = await this.modeloModel.delete(id);
 
     if (!result) {
-      return res.status(400).json({error: "Error deleting modelo"});
+      return res.status(400).json({ success: false, error: "Error al eliminar el modelo" });
     }
 
-    res.json({success: true});
+    res.json({ success: true });
   }
 }

@@ -2,8 +2,10 @@ import { validateCliente, validatePartialCliente } from "../schemas/cliente.sche
 import bcrypt from "bcryptjs";
 
 export default class ClienteController {
-  constructor({ clienteModel }) {
+  constructor({ clienteModel, polizaModel, reporteSiniestroModel }) {
     this.clienteModel = clienteModel;
+    this.poliza = polizaModel;
+    this.reporteSiniestroModel = reporteSiniestroModel;
   }
 
   getAll = async (req, res) => {
@@ -59,7 +61,7 @@ export default class ClienteController {
 
     const result = await this.clienteModel.create({ input: newCliente.data });
 
-    if(!result.success) {
+    if (!result.success) {
       return res.status(500).json({ success: false, error: "Error al crear el cliente" });
     }
 
@@ -86,7 +88,7 @@ export default class ClienteController {
 
     const emailExist = await this.clienteModel.getByEmailAndNotId(newCliente.data.correo, documento);
 
-    if (emailExist.length > 0 ) {
+    if (emailExist.length > 0) {
       return res.status(400).json({
         success: false, error: "Correo ya registrado"
       });
@@ -94,7 +96,7 @@ export default class ClienteController {
 
     const result = await this.clienteModel.update({ documento, input: newCliente.data });
 
-    if(!result) {
+    if (!result) {
       return res.status(500).json({ success: false, error: "Error al actualizar el cliente" });
     }
 
@@ -104,9 +106,21 @@ export default class ClienteController {
   delete = async (req, res) => {
     const { documento } = req.params;
 
+    const polizaExist = await this.polizaModel.getByCliente(documento);
+
+    if (polizaExist) {
+      return res.status(400).json({ success: false, error: "El cliente tiene polizas a su nombre" })
+    }
+
+    const reporteSiniestroExist = await this.reporteSiniestroModel.getByCliente(documento)
+
+    if (reporteSiniestroExist) {
+      return res.status(400).json({ success: true, error: "El cliente tiene reportes registrados" })
+    }
+    
     const result = await this.clienteModel.delete(documento);
 
-    if(!result) {
+    if (!result) {
       return res.status(500).json({ success: false, error: "Error al eliminar el cliente" });
     }
 
@@ -128,7 +142,7 @@ export default class ClienteController {
 
     const result = await this.clienteModel.changePassword({ documento, contrasena: hashedPassword });
 
-    if(!result) {
+    if (!result) {
       return res.status(500).json({ success: false, error: "Error al cambiar la contraseña" });
     }
 

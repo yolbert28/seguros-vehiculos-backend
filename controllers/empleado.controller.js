@@ -4,8 +4,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export default class EmpleadoController {
-  constructor({ empleadoModel }) {
+  constructor({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel  }) {
     this.empleadoModel = empleadoModel;
+    this.inspeccionSiniestroModel = inspeccionSiniestroModel;
+    this.inspeccionIndemnizacionModel = inspeccionIndemnizacionModel;
+    this.polizaModel = polizaModel;
   }
 
   getAll = async (req, res) => {
@@ -85,15 +88,36 @@ export default class EmpleadoController {
   delete = async (req, res) => {
     const { documento } = req.params;
 
+    const inspeccionSiniestroExists = await this.inspeccionSiniestroModel.getByInspector(documento);
+
+    if(inspeccionSiniestroExists) {
+      return res.status(400).json({ success: false, error: "El inspector tiene inspecciones de siniestro" });
+    }
+
+    const inspeccionIndemnizacionExists = await this.inspeccionIndemnizacionModel.getByInspector(documento);
+
+    if(inspeccionIndemnizacionExists) {
+      return res.status(400).json({ success: false, error: "El inspector tiene inspecciones de indemnizacion" });
+    }
+
+    const polizaExists = await this.polizaModel.getByAsesor(documento);
+
+    if(polizaExists) {
+      return res.status(400).json({ success: false, error: "El asesor tiene polizas" });
+    }
+
     const documentoExists = await this.empleadoModel.getById(documento);
 
     if (!documentoExists) {
-      return res.status(400).json({ error: "Documento no existe" });
+      return res.status(400).json({ success: false,error: "Documento no existe" });
     }
 
     const result = await this.empleadoModel.delete(documento);
 
-    return res.status(200).json({ sucess: result });
+    if(!result)
+      return res.status(500).json({ success: false, error: "Error al eliminar empleado" });
+
+    return res.status(200).json({ sucess: true });
   }
 
   login = async (req, res) => {

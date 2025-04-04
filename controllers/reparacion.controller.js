@@ -1,10 +1,12 @@
 import { validatePartialReparacion, validateReparacion } from "../schemas/reparacion.schema.js";
 
 export default class ReparacionController {
-  constructor({ reparacionModel, indemnizacionModel, tallerModel }) {
+  constructor({ reparacionModel, indemnizacionModel, tallerModel, pagoReparacionModel, repuestoReparacionModel }) {
     this.reparacionModel = reparacionModel;
     this.indemnizacionModel = indemnizacionModel;
     this.tallerModel = tallerModel;
+    this.pagoReparacionModel = pagoReparacionModel;
+    this.repuestoReparacionModel = repuestoReparacionModel;
   }
 
   getAll = async (req, res) => {
@@ -82,6 +84,17 @@ export default class ReparacionController {
 
   delete = async (req, res) => {
     const { id } = req.params;
+
+    const pagoReparacionExist = await this.pagoReparacionModel.getByReparacion(id)
+
+    if(pagoReparacionExist)
+      return res.status(400).json({success: false, error: "La reparacion tiene pagos asociados"})
+
+    const repuestoReparacionExist = await this.repuestoReparacionModel.getByReparacion(id)
+
+    if(repuestoReparacionExist)
+      return res.status(400).json({success: false, error:"La reparacion tiene repuestos asociados"})
+
     const result = await this.reparacionModel.delete(id);
 
     if (result) {

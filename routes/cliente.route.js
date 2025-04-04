@@ -1,10 +1,10 @@
 import { Router } from "express";
 import ClienteController from "../controllers/cliente.controller.js";
 
-export default function createClienteRouter({ clienteModel }){
+export default function createClienteRouter({ clienteModel, polizaModel, reporteSiniestroModel }){
   const router = Router();
 
-  const clienteController = new ClienteController({ clienteModel });
+  const clienteController = new ClienteController({ clienteModel, polizaModel, reporteSiniestroModel });
 
   router.get("/", clienteController.getAll);
   router.get("/:documento", clienteController.getById);

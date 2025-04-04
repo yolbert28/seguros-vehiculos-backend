@@ -19,9 +19,9 @@ export default class PagoReparacionController {
     res.json(pagoReparacion);
   }
 
-  getByReparacionId = async (req, res) => {
+  getByReparacion = async (req, res) => {
     const { reparacionId } = req.params;
-    const pagosReparacion = await this.pagoReparacionModel.getByReparacionId(reparacionId);
+    const pagosReparacion = await this.pagoReparacionModel.getByReparacion(reparacionId);
 
     res.json(pagosReparacion);
   }
@@ -62,10 +62,10 @@ export default class PagoReparacionController {
 
     const result = await this.pagoReparacionModel.delete(id);
 
-    if(!result){
-      return res.status(500).json({success: false,error: "Error al eliminar el pago" });
+    if (!result) {
+      return res.status(500).json({ success: false, error: "Error al eliminar el pago" });
     }
 
-    res.status(200).json({success: true});
+    res.status(200).json({ success: true });
   }
 }

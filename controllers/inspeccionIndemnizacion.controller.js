@@ -29,7 +29,7 @@ export default class InspeccionIndemnizacionController {
 
   getByInspectorDoc = async (req, res) => {
     const { doc } = req.params;
-    const inspeccionesIndemnizacion = await this.inspeccionIndemnizacionModel.getByInspectorDoc(doc);
+    const inspeccionesIndemnizacion = await this.inspeccionIndemnizacionModel.getByInspector(doc);
 
     res.json(inspeccionesIndemnizacion);
   }
@@ -85,5 +85,5 @@ export default class InspeccionIndemnizacionController {
 
     res.json({ success: true });
   }
-  
+
 }

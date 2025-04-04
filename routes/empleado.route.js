@@ -1,10 +1,10 @@
 import { Router } from "express";
 import EmpleadoController from "../controllers/empleado.controller.js";
 
-export default function createEmpleadoRoute({empleadoModel}){
+export default function createEmpleadoRoute({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel  }){
   const route = Router();
 
-  const empleadoController = new EmpleadoController({empleadoModel});
+  const empleadoController = new EmpleadoController({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel  });
 
   route.get("/", empleadoController.getAll);
   route.get("/:documento", empleadoController.getById);

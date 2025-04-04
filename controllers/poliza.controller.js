@@ -1,10 +1,12 @@
 import { validatePoliza } from "../schemas/poliza.schema.js";
 
 export default class PolizaController {
-  constructor({ polizaModel, empleadoModel, polizaServicioModel }) {
+  constructor({ polizaModel, empleadoModel, polizaServicioModel, vehiculoModel, primaModel }) {
     this.polizaModel = polizaModel;
     this.empleadoModel = empleadoModel;
     this.polizaServicioModel = polizaServicioModel;
+    this.vehiculoModel = vehiculoModel;
+    this.primaModel = primaModel;
   }
 
   getAll = async (req, res) => {
@@ -17,6 +19,14 @@ export default class PolizaController {
     const { id } = req.params;
 
     const result = await this.polizaModel.getById(id);
+
+    return res.json(result);
+  }
+
+  getByCliente = async (req, res) => {
+    const { documento } = req.params;
+
+    const result = await this.polizaModel.getByCliente(documento);
 
     return res.json(result);
   }
@@ -111,10 +121,20 @@ export default class PolizaController {
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const vehiculoExist = await this.vehiculoModel.getByPoliza(id);
+
+    if (vehiculoExist)
+      return res.status(400).json({ success: false, error: "La poliza tiene vehiculos a su cargo" })
+
+    const primaExist = await this.primaModel.getByPoliza(id);
+
+    if (primaExist)
+      return res.status(400).json({ success: false, error: "La poliza tiene primas registradas" })
+
     const result = await this.polizaModel.delete(id);
 
     if (!result) {
-      return res.status(500).json({ error: "Error al eliminar la poliza" });
+      return res.status(500).json({ success: false, error: "Error al eliminar la poliza" });
     }
 
     return res.status(200).json({ success: result });

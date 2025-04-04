@@ -2,10 +2,13 @@ import { validatePartialSiniestro, validateSiniestro } from "../schemas/siniestr
 
 export default class SiniestroController {
 
-  constructor({ siniestroModel, reporteSiniestroModel, vehiculoModel }) {
+  constructor({ siniestroModel, reporteSiniestroModel, vehiculoModel, indemnizacionModel, inspeccionSiniestroModel, evidenciaModel }) {
     this.siniestroModel = siniestroModel;
     this.reporteSiniestroModel = reporteSiniestroModel;
     this.vehiculoModel = vehiculoModel;
+    this.indemnizacionModel = indemnizacionModel;
+    this.inspeccionSiniestroModel = inspeccionSiniestroModel;
+    this.evidenciaModel = evidenciaModel;
   }
 
   getAll = async (req, res) => {
@@ -78,10 +81,27 @@ export default class SiniestroController {
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const evidenciaExist = await this.evidenciaModel.getBySiniestro(id);
+
+    if(evidenciaExist) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene evidencias asociadas" });
+    }
+    const indemnizacionExist = await this.indemnizacionModel.getBySiniestro(id);
+
+    if(indemnizacionExist) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene indemnizaciones asociadas" });
+    }
+
+    const inspeccionSiniestroExist = await this.inspeccionSiniestroModel.getBySiniestro(id);
+
+    if(inspeccionSiniestroExist) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene inspecciones asociadas" });
+    }
+
     const result = await this.siniestroModel.delete(id);
 
     if (!result) {
-      return res.status(500).json({ message: "Error al eliminar el siniestro" });
+      return res.status(500).json({ success: false, error: "Error al eliminar el siniestro" });
     }
 
     return res.status(200).json({ success: true });

@@ -1,10 +1,10 @@
 import { Router } from "express";
 import ModeloController from "../controllers/modelo.controller.js";
 
-export default function createModeloRouter({ modeloModel, marcaModel }) {
+export default function createModeloRouter({ modeloModel, marcaModel, vehiculoModel }) {
   const router = Router();
 
-  const modeloController = new ModeloController({modeloModel, marcaModel});
+  const modeloController = new ModeloController({ modeloModel, marcaModel, vehiculoModel });
 
   router.get('/', modeloController.getAll);
   router.get('/:id', modeloController.getById);

@@ -29,13 +29,13 @@ export default class PrimaController {
 
     const polizaExist = this.polizaModel.getById(newPrima.data.poliza_id)
 
-    if(!polizaExist){
+    if (!polizaExist) {
       return res.status(400).json({ error: "No existe la poliza" })
     }
 
     const result = await this.primaModel.create(newPrima.data)
 
-    if(!result.success) {
+    if (!result.success) {
       return res.status(500).json({ error: "No se pudo crear la prima" })
     }
 
@@ -52,20 +52,26 @@ export default class PrimaController {
 
     const result = await this.primaModel.update(id, newPrima.data)
 
-    if(!result) {
+    if (!result) {
       return res.status(500).json({ error: "No se pudo actualizar la prima" })
     }
 
-    return res.status(200).json({success: true});
+    return res.status(200).json({ success: true });
   }
 
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const result  = await this.primaModel.delete(id);
+    const primaExist = await this.primaModel.getById(id)
+
+    if (!primaExist) {
+      return res.status(404).json({ success: false, error: "No existe una prima con ese id" })
+    }
+
+    const result = await this.primaModel.delete(id);
 
     if (!result) {
-      return res.status(500).json({ error: "Error al eliminar la prima" });
+      return res.status(500).json({ success: false, error: "Error al eliminar la prima" });
     }
 
     return res.status(200).json({ success: result });

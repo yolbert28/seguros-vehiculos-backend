@@ -13,6 +13,12 @@ export default class repuestoSiniestroModel {
     return result.rows[0];
   }
 
+  static async getByInspeccion(id){
+    const result = await turso.execute("SELECT * FROM repuesto_siniestro WHERE inspeccion_siniestro_id = ?", [id])
+
+    return result.rows;
+  }
+
   static async getByInspeccion(id) {
     const result = await turso.execute("SELECT * FROM repuesto_siniestro WHERE inspeccion_siniestro_id = ?", [id])
 

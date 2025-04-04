@@ -13,13 +13,13 @@ export default class InspeccionIndemnizacionModel {
     return result.rows[0];
   }
 
-  static async getByIndemnizacionId(indemnizacionId) {
+  static async getByIndemnizacion(indemnizacionId) {
     const result = await turso.execute("SELECT * FROM inspeccion_indemnizacion WHERE indemnizacion_id = ?", [indemnizacionId]);
 
     return result.rows;
   }
 
-  static async getByInspectorDoc(doc) {
+  static async getByInspector(doc) {
     const result = await turso.execute("SELECT * FROM inspeccion_indemnizacion WHERE inspector_doc = ?", [doc]);
 
     return result.rows;

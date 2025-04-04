@@ -13,6 +13,18 @@ export default class PolizaModel {
     return result.rows[0];
   }
 
+  static async getByCliente(documento) {
+    const result = await turso.execute("SELECT * FROM poliza WHERE cliente_doc = ?", [documento]);
+
+    return result.rows;
+  }
+
+  static async getByAsesor(documento) {
+    const result = await turso.execute("SELECT * FROM poliza WHERE asesor_doc = ?", [documento]);
+
+    return result.rows;
+  }
+
   static async create(input) {
     const { cliente_doc, asesor_doc,fecha_fin, tipo_pago } = input;
 

@@ -1,8 +1,10 @@
 import { validatePartialTaller, validateTaller } from "../schemas/taller.schema.js";
 
 export default class TallerController {
-  constructor({ tallerModel }) {
+  constructor({ tallerModel, reparacionModel, mantenimientoModel }) {
     this.tallerModel = tallerModel;
+    this.reparacionModel = reparacionModel;
+    this.mantenimientoModel = mantenimientoModel;
   }
 
   getAll = async (req, res) => {
@@ -10,7 +12,7 @@ export default class TallerController {
 
     res.status(200).json(talleres);
   }
-  
+
   getById = async (req, res) => {
     const { rif } = req.params;
     const taller = await this.tallerModel.getById(rif);
@@ -69,13 +71,13 @@ export default class TallerController {
       return res.status(400).json({ error: newTaller.error });
     }
 
-    const nameExist = await this.tallerModel.getByNameAndNotRif(newTaller.data.nombre,rif);
+    const nameExist = await this.tallerModel.getByNameAndNotRif(newTaller.data.nombre, rif);
 
     if (nameExist.length > 0) {
       return res.status(400).json({ message: "Ya existe un taller con ese nombre" });
     }
 
-    const correoExist = await this.tallerModel.getByCorreoAndNotRif(newTaller.data.correo,rif);
+    const correoExist = await this.tallerModel.getByCorreoAndNotRif(newTaller.data.correo, rif);
 
     if (correoExist.length > 0) {
       return res.status(400).json({ message: "Ya existe un taller con ese correo" });
@@ -93,12 +95,22 @@ export default class TallerController {
   delete = async (req, res) => {
     const { rif } = req.params;
 
+    const reparacionExist = await this.reparacionModel.getByTaller(rif);
+
+    if (reparacionExist)
+      return res.status(400).json({ success: false, error: "El taller tiene reparaciones registradas" })
+
+    const mantenimientoExist = await this.mantenimientoModel.getByTaller(rif)
+
+    if (mantenimientoExist)
+      return res.status(400).json({ success: false, error: "El taller tiene mantenimientos registrados" })
+
     const result = await this.tallerModel.delete(rif);
 
     if (result) {
-      res.status(200).json({ message: "Taller eliminado" });
+      res.status(200).json({ success: true });
     } else {
-      res.status(500).json({ message: "Error al eliminar el taller" });
+      res.status(500).json({ success: false, error: "Error al eliminar el taller" });
     }
   }
 }

@@ -13,7 +13,7 @@ export default class PagoReparacionModel {
     return result.rows[0];
   }
 
-  static async getByReparacionId(reparacionId) {
+  static async getByReparacion(reparacionId) {
     const result = await turso.execute("SELECT * FROM pago_reparacion WHERE reparacion_id = ?", [reparacionId]);
 
     return result.rows;

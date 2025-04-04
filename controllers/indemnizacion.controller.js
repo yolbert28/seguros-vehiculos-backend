@@ -1,9 +1,11 @@
 import { validateIndemnizacion, validatePartialIndemnizacion } from "../schemas/indemnizacion.schema.js";
 
 export default class IndemnizacionController {
-  constructor({ indemnizacionModel, siniestroModel }) {
+  constructor({ indemnizacionModel, siniestroModel, reparacionModel, inspeccionIndemnizacionModel, }) {
     this.indemnizacionModel = indemnizacionModel;
     this.siniestroModel = siniestroModel;
+    this.reparacionModel = reparacionModel;
+    this.inspeccionIndemnizacionModel = inspeccionIndemnizacionModel;
   }
 
   getAll = async (req, res) => {
@@ -21,7 +23,7 @@ export default class IndemnizacionController {
 
   getBySiniestroId = async (req, res) => {
     const { id } = req.params;
-    const indemnizacion = await this.indemnizacionModel.getBySiniestroId(id);
+    const indemnizacion = await this.indemnizacionModel.getBySiniestro(id);
 
     res.json(indemnizacion);
   }
@@ -35,13 +37,13 @@ export default class IndemnizacionController {
 
     const siniestroExist = await this.siniestroModel.getById(newIndemnizacion.data.siniestro_id);
 
-    if(!siniestroExist) {
+    if (!siniestroExist) {
       return res.status(400).json({ error: "Siniestro no existe" });
     }
 
     const result = await this.indemnizacionModel.create(newIndemnizacion.data);
 
-    if(!result.success) {
+    if (!result.success) {
       return res.status(500).json({ error: "Error al crear indemnizacion" });
     }
 
@@ -63,6 +65,16 @@ export default class IndemnizacionController {
 
   delete = async (req, res) => {
     const { id } = req.params;
+
+    const reparacionExist = await this.reparacionModel.getByIndemnizacion(id)
+
+    if (reparacionExist)
+      return res.status(400).json({ success: false, error: "La indemnizacion tiene reparaciones registradas" })
+
+    const inspeccionIndemnizacionExist = await this.inspeccionIndemnizacionModel.getByIndemnizacion(id)
+
+    if (inspeccionIndemnizacionExist)
+      return res.status(400).json({ success: false, error: "La indemnizacion tiene inspecciones registradas" })
 
     const result = await this.indemnizacionModel.delete(id);
 

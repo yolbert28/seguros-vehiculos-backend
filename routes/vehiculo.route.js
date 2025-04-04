@@ -1,10 +1,10 @@
 import { Router } from "express";
 import VehiculoController from "../controllers/vehiculo.controller";
 
-export default function createVehiculoRouter({ vehiculoModel, polizaModel }) {
+export default function createVehiculoRouter({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }) {
   const route = Router();
 
-  const vehiculoController = new VehiculoController({ vehiculoModel, polizaModel });
+  const vehiculoController = new VehiculoController({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel });
 
   route.get("/", vehiculoController.getAll);
   route.get("/:id", vehiculoController.getById);

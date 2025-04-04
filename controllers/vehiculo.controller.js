@@ -1,9 +1,11 @@
 import { validatePartialVehiculo, validateVehiculo } from "../schemas/vehiculo.schema.js";
 
 export default class VehiculoController {
-  constructor({ vehiculoModel, polizaModel }) {
+  constructor({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }) {
     this.vehiculoModel = vehiculoModel;
     this.polizaModel = polizaModel;
+    this.siniestroModel = siniestroModel;
+    this.mantenimientoModel = mantenimientoModel;
   }
 
   getAll = async (req, res) => {
@@ -31,20 +33,20 @@ export default class VehiculoController {
   create = async (req, res) => {
     const newVehiculo = validateVehiculo(req.body);
 
-    if(!newVehiculo.success) {
+    if (!newVehiculo.success) {
       return res.status(400).json({ error: newVehiculo.error });
     }
 
     const polizaExist = await this.polizaModel.getById(newVehiculo.data.poliza_id);
 
-    if(polizaExist.length === 0) {
+    if (polizaExist.length === 0) {
       return res.status(400).json({ error: "No existe la poliza" });
     }
 
     const result = await this.vehiculoModel.create(newVehiculo.data);
 
     if (!result.success) {
-      return res.status(400).json({error: "Error creating vehiculo"});
+      return res.status(400).json({ error: "Error creating vehiculo" });
     }
 
     res.status(201).json(result.data);
@@ -54,20 +56,20 @@ export default class VehiculoController {
     const { id } = req.params;
     const vehiculo = validatePartialVehiculo(req.body);
 
-    if(!vehiculo.success) {
+    if (!vehiculo.success) {
       return res.status(400).json({ error: vehiculo.error });
     }
 
     const vehiculoExist = await this.vehiculoModel.getById(id);
 
-    if(vehiculoExist.length === 0) {
+    if (vehiculoExist.length === 0) {
       return res.status(400).json({ error: "No existe el vehiculo" });
     }
 
     const result = await this.vehiculoModel.update(id, vehiculo.data);
 
     if (!result) {
-      return res.status(400).json({error: "Error updating vehiculo"});
+      return res.status(400).json({ error: "Error updating vehiculo" });
     }
 
     res.status(200).json({ success: true });
@@ -76,10 +78,22 @@ export default class VehiculoController {
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const siniestroExist = await this.siniestroModel.getByVehiculo(id);
+
+    if (siniestroExist) {
+      return res.status(400).json({ success: false, error: "El vehiculo tiene siniestros registrados" })
+    }
+
+    const mantenimientoExist = await this.mantenimientoModel.getByVehiculo(id);
+
+    if (mantenimientoExist) {
+      return res.status(400).json({ success: false, error: "El vehiculo tiene mantenimientos registrados" })
+    }
+
     const result = await this.vehiculoModel.delete(id);
 
     if (!result) {
-      return res.status(400).json({error: "Error deleting vehiculo"});
+      return res.status(400).json({ success: false, error: "Error deleting vehiculo" });
     }
 
     res.status(200).json({ success: true });

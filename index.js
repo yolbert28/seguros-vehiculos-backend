@@ -5,7 +5,7 @@ import createClienteRouter from './routes/cliente.route.js';
 import createCoberturaRouter from './routes/cobertura.route.js';
 import createServicioRouter from './routes/servicio.route.js';
 import createMarcaRouter from './routes/marca.route.js';
-import createModeloRouter from './routes/modelo.router.js';
+import createModeloRouter from './routes/modelo.route.js';
 import createEmpleadoRouter from './routes/empleado.route.js';
 import createPolizaRouter from './routes/poliza.route.js';
 import createPrimaRouter from './routes/prima.route.js';
@@ -22,6 +22,7 @@ import createIndemnizacionRouter from './routes/indemnizacion.route.js';
 import createInspeccionIndemnizacionRouter from './routes/inspeccionIndemnizacion.route.js';
 import createInspeccionSiniestroRouter from './routes/inspeccionSiniestro.route.js';
 import createRepuestoReparacionRouter from './routes/repuestoReparacion.route.js';
+import { corsMiddleware } from './middlewares/cors.middleware.js';
 
 import clienteModel from './models/cliente.model.js';
 import coberturaModel from './models/cobertura.model.js';
@@ -45,7 +46,8 @@ import indemnizacionModel from './models/indemnizacion.model.js';
 import inspeccionIndemnizacionModel from './models/inspeccionIndemnizacion.model.js';
 import inspeccionSiniestroModel from './models/inspeccionSiniestro.model.js';
 import repuestoReparacionModel from './models/repuestoReparacion.model.js';
-import { corsMiddleware } from './middlewares/cors.middleware.js';
+import coberturaServicioModel from './models/coberturaServicio.model.js';
+import polizaServicioModel from './models/polizaServicio.model.js';
 
 const app = express();
 
@@ -58,26 +60,26 @@ app.use(corsMiddleware());
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/client", createClienteRouter({ clienteModel }))
-app.use("/coverage", createCoberturaRouter({ coberturaModel }))
-app.use("/service", createServicioRouter({ servicioModel }))
+app.use("/client", createClienteRouter({ clienteModel, polizaModel, reporteSiniestroModel }))
+app.use("/coverage", createCoberturaRouter({ coberturaModel, coberturaServicioModel }))
+app.use("/service", createServicioRouter({ servicioModel, coberturaServicioModel, polizaServicioModel }))
 app.use("/brand", createMarcaRouter({ marcaModel }))
-app.use("/model", createModeloRouter({ modeloModel, marcaModel }))
-app.use("/employee", createEmpleadoRouter({ empleadoModel }))
-app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel }))
+app.use("/model", createModeloRouter({ modeloModel, marcaModel, vehiculoModel }))
+app.use("/employee", createEmpleadoRouter({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel }))
+app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel, polizaServicioModel, vehiculoModel, primaModel }))
 app.use("/premium", createPrimaRouter({ primaModel, polizaModel }))
 app.use("/accidentRepair", createRepuestoSiniestroRouter({ repuestoSiniestroModel, inspeccionSiniestroModel }))
-app.use("/workshop", createTallerRouter({ tallerModel }))
+app.use("/workshop", createTallerRouter({ tallerModel, reparacionModel, mantenimientoModel }))
 app.use("/accidentReport", createReporteSiniestroRouter({ reporteSiniestroModel, clienteModel }))
 app.use("/evidence", createEvidenciaRouter({ evidenciaModel, siniestroModel }))
-app.use("/vehicle", createVehiculoRouter({vehiculoModel, polizaModel}))
+app.use("/vehicle", createVehiculoRouter({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }))
 app.use("/maintenance", createMantenimientoRouter({ mantenimientoModel, vehiculoModel, tallerModel }))
-app.use("/sinister", createSiniestroRouter({ siniestroModel, reporteSiniestroModel, vehiculoModel }))
+app.use("/sinister", createSiniestroRouter({ siniestroModel, reporteSiniestroModel, vehiculoModel, indemnizacionModel, inspeccionSiniestroModel, evidenciaModel }))
 app.use("/repairPayment", createPagoReparacionRouter({ pagoReparacionModel, reparacionModel }))
-app.use("/repair", createReparacionRouter({ reparacionModel, indemnizacionModel, tallerModel }))
-app.use("/indemnity", createIndemnizacionRouter({ indemnizacionModel, siniestroModel }))
+app.use("/repair", createReparacionRouter({ reparacionModel, indemnizacionModel, tallerModel, pagoReparacionModel, repuestoReparacionModel }))
+app.use("/indemnity", createIndemnizacionRouter({ indemnizacionModel, siniestroModel, reparacionModel, inspeccionIndemnizacionModel, }))
 app.use("/indemnityInspection", createInspeccionIndemnizacionRouter({ inspeccionIndemnizacionModel, indemnizacionModel, empleadoModel }))
-app.use("/accidentInspection", createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel }))
+app.use("/accidentInspection", createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel }))
 app.use("/repairReplacement", createRepuestoReparacionRouter({ repuestoReparacionModel, reparacionModel }))
 
 app.listen(PORT, () => {

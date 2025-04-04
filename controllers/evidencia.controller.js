@@ -31,20 +31,20 @@ export default class EvidenciaController {
   create = async (req, res) => {
     const newEvidencia = validateEvidencia(req.body);
 
-    if(!newEvidencia.success) {
+    if (!newEvidencia.success) {
       return res.status(400).json({ error: newEvidencia.error });
     }
 
     const siniestroExist = await this.siniestroModel.getById(newEvidencia.data.siniestro_id);
 
-    if( siniestroExist.length === 0 ) {
+    if (siniestroExist.length === 0) {
       return res.status(400).json({ error: "No existe el siniestro" });
     }
 
     const result = await this.evidenciaModel.create(newEvidencia.data);
 
     if (!result.success) {
-      return res.status(400).json({error: "Error creating evidencia"});
+      return res.status(400).json({ error: "Error creating evidencia" });
     }
 
     res.status(201).json(result.data);
@@ -54,20 +54,20 @@ export default class EvidenciaController {
     const { id } = req.params;
     const evidencia = validatePartialEvidencia(req.body);
 
-    if(!evidencia.success) {
+    if (!evidencia.success) {
       return res.status(400).json({ error: evidencia.error });
     }
 
     const evidenciaExist = await this.evidenciaModel.getById(id);
 
-    if(evidenciaExist.length === 0) {
+    if (evidenciaExist.length === 0) {
       return res.status(400).json({ error: "No existe la evidencia" });
     }
 
     const result = await this.evidenciaModel.update(id, evidencia.data);
 
     if (!result) {
-      return res.status(400).json({error: "Error updating evidencia"});
+      return res.status(400).json({ error: "Error updating evidencia" });
     }
 
     res.status(200).json({ success: true });
@@ -76,10 +76,16 @@ export default class EvidenciaController {
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const evidenciaExist = await this.evidenciaModel.getById(id);
+
+    if (!evidenciaExist) {
+      return res.status(404).json({ success: false, error: "No existe una evidencia con ese id" })
+    }
+
     const result = await this.evidenciaModel.delete(id);
 
     if (!result) {
-      return res.status(400).json({error: "Error deleting evidencia"});
+      return res.status(400).json({ success: false, error: "Error deleting evidencia" });
     }
 
     res.status(200).json({ success: true });

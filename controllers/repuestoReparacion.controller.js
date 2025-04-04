@@ -29,19 +29,19 @@ export default class RepuestoReparacionController {
   create = async (req, res) => {
     const repuestoReparacion = validateRepuestoReparacion(req.body);
 
-    if( !repuestoReparacion.success ) {
+    if (!repuestoReparacion.success) {
       return res.status(400).json(repuestoReparacion.error);
     }
 
     const reparacionExist = await this.reparacionModel.getById(repuestoReparacion.data.reparacion_id);
 
-    if( !reparacionExist ) {
+    if (!reparacionExist) {
       return res.status(400).json({ error: "La reparacion no existe" });
     }
 
     const result = await this.repuestoReparacionModel.create(repuestoReparacion);
 
-    if( !result.success ){
+    if (!result.success) {
       return res.status(500).json({ error: "Error al crear el repuesto de la reparacion" });
     }
 
@@ -52,13 +52,13 @@ export default class RepuestoReparacionController {
     const { id } = req.params;
     const repuestoReparacion = validatePartialRepuestoReparacion(req.body);
 
-    if( !repuestoReparacion.success ) {
+    if (!repuestoReparacion.success) {
       return res.status(400).json(repuestoReparacion.error);
     }
 
     const result = await this.repuestoReparacionModel.update(id, repuestoReparacion.data);
 
-    if( !result ){
+    if (!result) {
       return res.status(500).json({ error: "Error al actualizar el repuesto de la reparacion" });
     }
 
@@ -67,10 +67,17 @@ export default class RepuestoReparacionController {
 
   delete = async (req, res) => {
     const { id } = req.params;
+
+    const repuestoReparacionExist = await this.repuestoReparacionModel.getById(id);
+
+    if (!repuestoReparacionExist) {
+      return res.status(404).json({ success: false, error: "No existe un repuesto con este id" })
+    }
+
     const result = await this.repuestoReparacionModel.delete(id);
 
-    if( !result ){
-      return res.status(500).json({ error: "Error al eliminar el repuesto de la reparacion" });
+    if (!result) {
+      return res.status(500).json({ success: false, error: "Error al eliminar el repuesto de la reparacion" });
     }
 
     res.json({ success: true });

@@ -1,10 +1,10 @@
 import { Router } from "express";
 import ReparacionController from "../controllers/reparacion.controller";
 
-export default function createReparacionRouter({ reparacionModel, indemnizacionModel, tallerModel }){
+export default function createReparacionRouter({ reparacionModel, indemnizacionModel, tallerModel, pagoReparacionModel, repuestoReparacionModel }){
   const route = Router();
 
-  const reparacionController = new ReparacionController({ reparacionModel, indemnizacionModel, tallerModel });
+  const reparacionController = new ReparacionController({ reparacionModel, indemnizacionModel, tallerModel, pagoReparacionModel, repuestoReparacionModel });
 
   route.get("/", reparacionController.getAll);
   route.get("/:id", reparacionController.getById);

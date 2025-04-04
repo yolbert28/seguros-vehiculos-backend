@@ -1,10 +1,11 @@
 import { validateInspeccionSiniestro, validatePartialInspeccionSiniestro } from "../schemas/inspeccionSiniestro.schema.js";
 
 export default class InspeccionSiniestroController {
-  constructor({ inspeccionSiniestroModel, siniestroModel, empleadoModel }) {
+  constructor({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel }) {
     this.inspeccionSiniestroModel = inspeccionSiniestroModel;
     this.siniestroModel = siniestroModel;
     this.empleadoModel = empleadoModel;
+    this.repuestoSiniestroModel = repuestoSiniestroModel;
   }
 
   getAll = async (req, res) => {
@@ -22,14 +23,14 @@ export default class InspeccionSiniestroController {
 
   getBySiniestroId = async (req, res) => {
     const { id } = req.params;
-    const inspeccionesSiniestro = await this.inspeccionSiniestroModel.getBySiniestroId(id);
+    const inspeccionesSiniestro = await this.inspeccionSiniestroModel.getBySiniestro(id);
 
     res.json(inspeccionesSiniestro);
   }
 
   getByInspectorDoc = async (req, res) => {
     const { doc } = req.params;
-    const inspeccionesSiniestro = await this.inspeccionSiniestroModel.getByInspectorDoc(doc);
+    const inspeccionesSiniestro = await this.inspeccionSiniestroModel.getByInspector(doc);
 
     res.json(inspeccionesSiniestro);
   }
@@ -81,12 +82,18 @@ export default class InspeccionSiniestroController {
 
   delete = async (req, res) => {
     const { id } = req.params;
+
+    const repuestoSiniestroExist = await this.repuestoSiniestroModel.getByInspeccion(id)
+
+    if(repuestoSiniestroExist)
+      return res.status(400).json({success: false, error: "La inspeccion tiene repuestos asociados"})
+    
     const result = await this.inspeccionSiniestroModel.delete(id);
 
     if (result) {
       res.json({ success: true });
     } else {
-      res.status(500).json({ error: "Error al eliminar inspeccion siniestro" });
+      res.status(500).json({success: false, error: "Error al eliminar inspeccion siniestro" });
     }
   }
 

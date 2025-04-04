@@ -44,7 +44,7 @@ export default class MantenimientoModel {
     const { descripcion } = mantenimiento;
 
     try {
-      const result = await turso.execute("UPDATE mantenimiento SET descripcion = ? WHERE id = ?", [descripcion, id]);
+      await turso.execute("UPDATE mantenimiento SET descripcion = ? WHERE id = ?", [descripcion, id]);
 
       return true;
     } catch (error) {

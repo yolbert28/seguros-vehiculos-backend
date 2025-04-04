@@ -1,10 +1,10 @@
 import { Router } from "express";
 import ServicioController from "../controllers/servicio.controller.js";
 
-export default function createServicioRouter({ servicioModel }) {
+export default function createServicioRouter({ servicioModel, coberturaServicioModel, polizaServicioModel }) {
   const router = Router();
 
-  const servicioController = new ServicioController({ servicioModel });
+  const servicioController = new ServicioController({ servicioModel, coberturaServicioModel, polizaServicioModel });
 
   router.get("/", servicioController.getAll);
   router.get("/:id", servicioController.getById);

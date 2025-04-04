@@ -1,10 +1,10 @@
 import { Router } from "express";
 import TallerController from "../controllers/taller.controller.js";
 
-export default function createTallerRouter({ tallerModel }){
+export default function createTallerRouter({ tallerModel, reparacionModel, mantenimientoModel }){
   const route = Router();
 
-  const tallerController = new TallerController({ tallerModel });
+  const tallerController = new TallerController({ tallerModel, reparacionModel, mantenimientoModel });
 
   route.get("/", tallerController.getAll);
   route.get("/:rif", tallerController.getById);

@@ -1,8 +1,9 @@
 import { validateCobertura, validatePartialCobertura } from "../schemas/cobertura.schema.js";
 
 export default class CoberturaController {
-  constructor({ coberturaModel }) {
+  constructor({ coberturaModel, coberturaServicioModel }) {
     this.coberturaModel = coberturaModel;
+    this.coberturaServicioModel = coberturaServicioModel;
   }
 
   getAll = async (req, res) => {
@@ -38,7 +39,7 @@ export default class CoberturaController {
 
     const result = await this.coberturaModel.create({ input: newCobertura.data });
 
-    if(!result.success) {
+    if (!result.success) {
       return res.status(400).json({
         success: false, error: "Error al crear cobertura"
       });
@@ -67,7 +68,7 @@ export default class CoberturaController {
 
     const result = await this.coberturaModel.update({ id, input: newCobertura.data });
 
-    if(!result) {
+    if (!result) {
       return res.status(400).json({
         success: false, error: "Error al actualizar cobertura"
       });
@@ -79,9 +80,15 @@ export default class CoberturaController {
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const hasCoberturaServicio = await this.coberturaServicioModel.getByCobertura(id)
+
+    if (hasCoberturaServicio) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar porque se encuentra siendo utilizado por algunos servicios" })
+    }
+
     const result = await this.coberturaModel.delete(id);
 
-    if(!result) {
+    if (!result) {
       return res.status(400).json({
         success: false, error: "Error al eliminar cobertura"
       });

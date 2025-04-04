@@ -40,25 +40,25 @@ export default class MantenimientoController {
   create = async (req, res) => {
     const newMantenimiento = validateMantenimiento(req.body);
 
-    if(!newMantenimiento.success) {
+    if (!newMantenimiento.success) {
       return res.status(400).json(newMantenimiento.error);
     }
 
     const vehiculoExist = await this.vehiculoModel.getById(newMantenimiento.data.vehiculo_mat);
 
-    if(!vehiculoExist) {
+    if (!vehiculoExist) {
       return res.status(400).json({ message: "Vehículo no encontrado" });
     }
 
     const tallerExist = await this.tallerModel.getById(newMantenimiento.data.taller_rif);
 
-    if(!tallerExist) {
+    if (!tallerExist) {
       return res.status(400).json({ message: "Taller no encontrado" });
     }
 
     const result = await this.mantenimientoModel.create(newMantenimiento.data);
 
-    if(!result.success) {
+    if (!result.success) {
       return res.status(500).json({ message: "Error al crear el mantenimiento" });
     }
 
@@ -70,28 +70,34 @@ export default class MantenimientoController {
 
     const mantenimiento = validatePartialMantenimiento(req.body);
 
-    if(!mantenimiento.success) {
+    if (!mantenimiento.success) {
       return res.status(400).json(mantenimiento.error);
     }
 
     const result = await this.mantenimientoModel.update(id, mantenimiento.data);
 
-    if(!result) {
+    if (!result) {
       return res.status(500).json({ message: "Error al actualizar el mantenimiento" });
     }
 
-    res.json({success: true});
+    res.json({ success: true });
   }
 
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const result = await this.mantenimientoModel.delete(id);
+    const mantenimientoExist = await this.mantenimientoModel.getById(id)
 
-    if(!result) {
-      return res.status(500).json({ message: "Error al eliminar el mantenimiento" });
+    if (!mantenimientoExist) {
+      return res.status(404).json({ success: false, error: "No existe un mantenimiento con este id" })
     }
 
-    res.json({success: true});
+    const result = await this.mantenimientoModel.delete(id);
+
+    if (!result) {
+      return res.status(500).json({ success: false, message: "Error al eliminar el mantenimiento" });
+    }
+
+    res.json({ success: true });
   }
 }

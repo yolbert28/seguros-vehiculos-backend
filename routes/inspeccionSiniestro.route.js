@@ -1,10 +1,10 @@
 import { Router } from "express";
 import InspeccionSiniestroController from "../controllers/inspeccionSiniestro.controller.js";
 
-export default function createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel }){
+export default function createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel }){
   const route = Router();
 
-  const inspeccionSiniestroController = new InspeccionSiniestroController({ inspeccionSiniestroModel, siniestroModel, empleadoModel });
+  const inspeccionSiniestroController = new InspeccionSiniestroController({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel });
 
   route.get("/", inspeccionSiniestroController.getAll);
   route.get("/:id", inspeccionSiniestroController.getById);

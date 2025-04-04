@@ -41,13 +41,13 @@ export default class RepuestoSiniestroController {
 
     const nombreExits = await this.repuestoSiniestroModel.getByNombreAndInspeccion(newRepuestoSiniestro.data.nombre, newRepuestoSiniestro.data.inspeccion_siniestro_id);
 
-    if(nombreExits){
+    if (nombreExits) {
       return res.status(400).json({ error: "Ya existe un repuesto con este nombre" })
     }
 
     const result = await this.repuestoSiniestroModel.create(newRepuestoSiniestro.data);
 
-    if(!result.success){
+    if (!result.success) {
       return res.status(500).json({ error: "No se pudo crear el repuesto del siniestro" })
     }
 
@@ -64,28 +64,34 @@ export default class RepuestoSiniestroController {
 
     const nombreExits = await this.repuestoSiniestroModel.getByNombreAndInspeccion(newRepuestoSiniestro.data.nombre, newRepuestoSiniestro.data.inspeccion_siniestro_id);
 
-    if(nombreExits){
+    if (nombreExits) {
       return res.status(400).json({ error: "Ya existe un repuesto con este nombre" })
     }
 
-    const result = await this.repuestoSiniestroModel.update(id,newRepuestoSiniestro.data);
+    const result = await this.repuestoSiniestroModel.update(id, newRepuestoSiniestro.data);
 
-    if(!result){
+    if (!result) {
       return res.status(500).json({ error: "No se pudo crear el repuesto del siniestro" })
     }
 
-    return res.status(200).json({success: result});
+    return res.status(200).json({ success: result });
   }
 
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const result = await this.repuestoSiniestroModel.delete(id);
+    const repuestoReparacionExist = await this.repuestoSiniestroModel.getById(id);
 
-    if(!result){
-      return res.status(500).json({ error: "No se pudo eliminar el repuesto del siniestro" })
+    if (!repuestoReparacionExist) {
+      return res.status(404).json({ success: false, error: "No existe un repuesto con este id" })
     }
 
-    return res.status(200).json({success: true});
+    const result = await this.repuestoSiniestroModel.delete(id);
+
+    if (!result) {
+      return res.status(500).json({ success: false, error: "No se pudo eliminar el repuesto del siniestro" })
+    }
+
+    return res.status(200).json({ success: true });
   }
 }
