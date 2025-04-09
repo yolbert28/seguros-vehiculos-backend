@@ -86,13 +86,13 @@ export default class VehiculoController {
 
     const siniestroExist = await this.siniestroModel.getByVehiculo(id);
 
-    if (siniestroExist) {
+    if (siniestroExist.length > 0) {
       return res.status(400).json({ success: false, error: "El vehiculo tiene siniestros registrados" })
     }
 
     const mantenimientoExist = await this.mantenimientoModel.getByVehiculo(id);
 
-    if (mantenimientoExist) {
+    if (mantenimientoExist.length > 0) {
       return res.status(400).json({ success: false, error: "El vehiculo tiene mantenimientos registrados" })
     }
 
