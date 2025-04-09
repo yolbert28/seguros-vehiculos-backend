@@ -107,13 +107,13 @@ export default class PolizaController {
     const polizaServicioExist = await this.polizaServicioModel.getById(id, servicioId);
 
     if (!polizaServicioExist) {
-      return res.status(400).json({ success: true, error: "El servicio no se encuentra dentro de la poliza" })
+      return res.status(400).json({ success: false, error: "El servicio no se encuentra dentro de la poliza" })
     }
 
     const result = await this.polizaServicioModel.delete({ poliza_id: id, servicio_id: servicioId })
 
-    if (result)
-      return res.status(500).json({ success: true, error: "Error al remover el servicio de la poliza" })
+    if (!result)
+      return res.status(500).json({ success: false, error: "Error al remover el servicio de la poliza" })
 
     res.status(200).json({ success: true })
   }
@@ -130,6 +130,12 @@ export default class PolizaController {
 
     if (primaExist.length > 0)
       return res.status(400).json({ success: false, error: "La poliza tiene primas registradas" })
+
+    const hasServicios = await this.polizaServicioModel.getByPoliza(id);
+
+    if (hasServicios.length > 0) {
+        return res.status(400).json({ success: false, error: "La poliza tiene servicios asignados" })
+    }
 
     const result = await this.polizaModel.delete(id);
 

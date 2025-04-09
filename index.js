@@ -1,5 +1,7 @@
 import express, { json } from 'express';
 import "dotenv/config";
+import { Server } from 'socket.io';
+import { createServer } from 'node:http';
 
 import createClienteRouter from './routes/cliente.route.js';
 import createCoberturaRouter from './routes/cobertura.route.js';
@@ -56,6 +58,16 @@ app.use(json());
 
 app.use(corsMiddleware());
 
+const server = createServer(app)
+const io = new Server(server, {
+    connectionStateRecovery: {
+        maxDisconnectionDuration: 10000
+    },
+    cors: {
+        origin: "*"
+    }
+})
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -81,6 +93,6 @@ app.use("/indemnityInspection", createInspeccionIndemnizacionRouter({ inspeccion
 app.use("/accidentInspection", createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel }))
 app.use("/repairReplacement", createRepuestoReparacionRouter({ repuestoReparacionModel, reparacionModel }))
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
