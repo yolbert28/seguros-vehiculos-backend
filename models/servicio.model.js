@@ -10,7 +10,7 @@ export default class ServicioModel {
   static async getById(id) {
     const result = await turso.execute("SELECT * FROM servicio WHERE id = ?", [id]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByNombreAndNotId(nombre, id) {

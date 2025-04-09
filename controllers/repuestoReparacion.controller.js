@@ -36,16 +36,16 @@ export default class RepuestoReparacionController {
     const reparacionExist = await this.reparacionModel.getById(repuestoReparacion.data.reparacion_id);
 
     if (!reparacionExist) {
-      return res.status(400).json({ error: "La reparacion no existe" });
+      return res.status(400).json({ success: false, error: "La reparacion no existe" });
     }
 
-    const result = await this.repuestoReparacionModel.create(repuestoReparacion);
+    const result = await this.repuestoReparacionModel.create(repuestoReparacion.data);
 
     if (!result.success) {
-      return res.status(500).json({ error: "Error al crear el repuesto de la reparacion" });
+      return res.status(500).json({ success: false, error: "Error al crear el repuesto de la reparacion" });
     }
 
-    res.status(201).json(result);
+    res.status(201).json(result.data);
   }
 
   update = async (req, res) => {
@@ -67,12 +67,6 @@ export default class RepuestoReparacionController {
 
   delete = async (req, res) => {
     const { id } = req.params;
-
-    const repuestoReparacionExist = await this.repuestoReparacionModel.getById(id);
-
-    if (!repuestoReparacionExist) {
-      return res.status(404).json({ success: false, error: "No existe un repuesto con este id" })
-    }
 
     const result = await this.repuestoReparacionModel.delete(id);
 

@@ -1,3 +1,5 @@
+import { turso } from "./connection/dbConnection.js";
+
 export default class InspeccionSiniestroModel {
   static async getAll() {
     const result = await turso.execute("SELECT * FROM inspeccion_siniestro");

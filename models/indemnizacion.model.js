@@ -21,12 +21,14 @@ export default class IndemnizacionModel {
   }
 
   static async create(indemnizacion) {
-    const { siniestro_id, descripcion, monto } = indemnizacion;
+    const { siniestro_id, descripcion, monto_reclamado } = indemnizacion;
+
+    console.log(siniestro_id, descripcion, monto_reclamado)
 
     try {
       const result = await turso.execute(
         "INSERT INTO indemnizacion (siniestro_id, descripcion, monto_reclamado) VALUES (?, ?, ?) RETURNING *",
-        [siniestro_id, descripcion, monto]
+        [siniestro_id, descripcion, monto_reclamado]
       )
 
       return { success: true, data: result.rows[0] };
@@ -37,12 +39,12 @@ export default class IndemnizacionModel {
   }
 
   static async update(id, indemnizacion) {
-    const { descripcion, monto } = indemnizacion;
+    const { descripcion, monto_reclamado } = indemnizacion;
 
     try {
       await turso.execute(
         "UPDATE indemnizacion SET descripcion = ?, monto_reclamado = ? WHERE id = ?",
-        [descripcion, monto, id]
+        [descripcion, monto_reclamado, id]
       )
 
       return true;

@@ -41,7 +41,7 @@ export default class PagoReparacionModel {
 
     try {
 
-      const result = await turso.execute(
+      await turso.execute(
         "UPDATE pago_reparacion SET pagante = ?, monto = ?, fecha = ? WHERE id = ?",
         [pagante, monto, fecha, id]
       )

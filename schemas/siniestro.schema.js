@@ -5,9 +5,9 @@ const siniestroSchema = z.object({
   vehiculo_mat: z.string().min(1).max(10),
   descripcion: z.string().min(5).max(450),
   lugar: z.string().min(5).max(255),
-  monto_estimado: z.string().min(5).max(255),
-  tipo_siniestro: z.number().int().positive(),
-  fecha: z.date(),
+  monto_estimado: z.number().int().positive(),
+  tipo_siniestro_id: z.number().int().positive(),
+  fecha: z.string().date(),
   estado: z.number().int().positive()
 })
 

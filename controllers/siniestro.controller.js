@@ -52,6 +52,12 @@ export default class SiniestroController {
       return res.status(400).json({ message: "Reporte de siniestro no encontrado" });
     }
 
+    const siniestroExist = await this.siniestroModel.getByReporteSiniestro(newSiniestro.data.reporte_siniestro_id);
+
+    if (siniestroExist) {
+      return res.status(400).json({ message: "Ya existe un siniestro asociado a este reporte" });
+    }
+
     const result = await this.siniestroModel.create(newSiniestro.data);
 
     if (!result.success) {
@@ -83,18 +89,18 @@ export default class SiniestroController {
 
     const evidenciaExist = await this.evidenciaModel.getBySiniestro(id);
 
-    if(evidenciaExist) {
+    if(evidenciaExist.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene evidencias asociadas" });
     }
     const indemnizacionExist = await this.indemnizacionModel.getBySiniestro(id);
 
-    if(indemnizacionExist) {
+    if(indemnizacionExist.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene indemnizaciones asociadas" });
     }
 
     const inspeccionSiniestroExist = await this.inspeccionSiniestroModel.getBySiniestro(id);
 
-    if(inspeccionSiniestroExist) {
+    if(inspeccionSiniestroExist.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene inspecciones asociadas" });
     }
 

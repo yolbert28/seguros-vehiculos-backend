@@ -62,6 +62,7 @@ export default class repuestoSiniestroModel {
   static async delete(id) {
     try {
       await turso.execute("DELETE FROM repuesto_siniestro WHERE id = ?", [id])
+      return true;
     } catch (e) {
       console.log(e);
       return false;

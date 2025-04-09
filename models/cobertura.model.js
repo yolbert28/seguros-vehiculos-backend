@@ -11,7 +11,7 @@ export default class CoberturaModel {
   static async getById(id) {
     const result = await turso.execute("SELECT * FROM cobertura WHERE id = ?", [id]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByNombreAndNotId(nombre, id) {

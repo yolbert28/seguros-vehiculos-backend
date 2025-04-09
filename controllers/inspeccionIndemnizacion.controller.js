@@ -1,4 +1,4 @@
-import { validateInspeccionIndemnizacion, validatePartialInspeccionIndemnizacion } from "../schemas/inspeccionIndemnizacion.schema";
+import { validateInspeccionIndemnizacion, validatePartialInspeccionIndemnizacion } from "../schemas/inspeccionIndemnizacion.schema.js";
 
 export default class InspeccionIndemnizacionController {
   constructor({ inspeccionIndemnizacionModel, indemnizacionModel, empleadoModel }) {
@@ -72,7 +72,11 @@ export default class InspeccionIndemnizacionController {
 
     const result = await this.inspeccionIndemnizacionModel.update(id, newInspeccionIndemnizacion.data);
 
-    res.json(result);
+    if (!result) {
+      return res.status(500).json({ success: false, error: "Error al actualizar la inspeccion" });
+    }
+
+    res.json({ success: true });
   }
 
   delete = async (req, res) => {

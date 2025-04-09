@@ -52,7 +52,6 @@ export default class TallerController {
       return res.status(400).json({ message: "Ya existe un taller con ese correo" });
     }
 
-
     console.log(newTaller.data);
     const result = await this.tallerModel.create(newTaller.data);
 
@@ -97,12 +96,12 @@ export default class TallerController {
 
     const reparacionExist = await this.reparacionModel.getByTaller(rif);
 
-    if (reparacionExist)
+    if (reparacionExist.length > 0)
       return res.status(400).json({ success: false, error: "El taller tiene reparaciones registradas" })
 
     const mantenimientoExist = await this.mantenimientoModel.getByTaller(rif)
 
-    if (mantenimientoExist)
+    if (mantenimientoExist.length > 0)
       return res.status(400).json({ success: false, error: "El taller tiene mantenimientos registrados" })
 
     const result = await this.tallerModel.delete(rif);

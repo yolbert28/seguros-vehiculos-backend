@@ -49,7 +49,7 @@ export default class ReparacionController {
       return res.status(400).json({ error: "Indemnizacion no existe" });
     }
 
-    const tallerExist = await this.tallerModel.getByRif(newReparacion.data.taller_rif);
+    const tallerExist = await this.tallerModel.getById(newReparacion.data.taller_rif);
 
     if (!tallerExist) {
       return res.status(400).json({ error: "Taller no existe" });
@@ -73,7 +73,7 @@ export default class ReparacionController {
       });
     }
 
-    const result = await this.reparacionModel.update(id, reparacion);
+    const result = await this.reparacionModel.update(id, reparacion.data);
 
     if (result) {
       res.json({ success: true });
@@ -87,20 +87,20 @@ export default class ReparacionController {
 
     const pagoReparacionExist = await this.pagoReparacionModel.getByReparacion(id)
 
-    if(pagoReparacionExist)
+    if(pagoReparacionExist.length > 0)
       return res.status(400).json({success: false, error: "La reparacion tiene pagos asociados"})
 
     const repuestoReparacionExist = await this.repuestoReparacionModel.getByReparacion(id)
 
-    if(repuestoReparacionExist)
+    if(repuestoReparacionExist.length > 0)
       return res.status(400).json({success: false, error:"La reparacion tiene repuestos asociados"})
 
     const result = await this.reparacionModel.delete(id);
 
     if (result) {
-      res.json({ message: "Reparacion eliminada" });
+      res.json({ success: true });
     } else {
-      res.status(500).json({ message: "Error al eliminar la reparacion" });
+      res.status(500).json({ success: false, error: "Error al eliminar la reparacion" });
     }
   }
 }

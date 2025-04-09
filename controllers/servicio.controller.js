@@ -81,7 +81,7 @@ export default class ServicioController {
   addCobertura = async (req, res) => {
     const { id, coberturaId } = req.params
 
-    const coberturaServicioExist = await this.coberturaServicioModel.getById(id, coberturaId);
+    const coberturaServicioExist = await this.coberturaServicioModel.getById(coberturaId, id);
 
     if (coberturaServicioExist) {
       return res.status(400).json({ success: false, error: "La cobertura ya se encuentra registrada en el servicio" })
@@ -89,7 +89,7 @@ export default class ServicioController {
 
     const result = await this.coberturaServicioModel.create({ cobertura_id: coberturaId, servicio_id: id })
 
-    if (result)
+    if (!result)
       return res.status(500).json({ success: false, error: "No se pudo agregar la cobertura al servicio" })
 
     res.status(200).json({ success: true })
@@ -98,7 +98,7 @@ export default class ServicioController {
   removeCobertura = async (req, res) => {
     const { id, coberturaId } = req.params
 
-    const coberturaServicioExist = await this.coberturaServicioModel.getById(id, coberturaId);
+    const coberturaServicioExist = await this.coberturaServicioModel.getById(coberturaId, id);
 
     if (!coberturaServicioExist) {
       return res.status(400).json({ success: false, error: "Esta cobertura no se encuentra registrada al servicio" })
@@ -106,7 +106,7 @@ export default class ServicioController {
 
     const result = await this.coberturaServicioModel.delete({ cobertura_id: coberturaId, servicio_id: id })
 
-    if (result)
+    if (!result)
       return res.status(500).json({ success: false, error: "No se pudo remover la cobertura del servicio" })
 
     res.status(200).json({ success: true })
@@ -115,15 +115,15 @@ export default class ServicioController {
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const hasCoberturaServicio = await this.coberturaServicioModel.getByCobertura(id)
+    const hasCoberturaServicio = await this.coberturaServicioModel.getByServicio(id)
 
-    if (hasCoberturaServicio) {
+    if (hasCoberturaServicio.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar porque tiene coberturas agregadas" })
     }
 
     const hasPolizaServicio = await this.polizaServicioModel.getByServicio(id);
 
-    if (hasPolizaServicio) {
+    if (hasPolizaServicio.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar porque se encuentra siendo utilizado por algunas polizas" })
     }
 

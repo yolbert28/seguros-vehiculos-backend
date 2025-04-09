@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ReparacionController from "../controllers/reparacion.controller";
+import ReparacionController from "../controllers/reparacion.controller.js";
 
 export default function createReparacionRouter({ reparacionModel, indemnizacionModel, tallerModel, pagoReparacionModel, repuestoReparacionModel }){
   const route = Router();

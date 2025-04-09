@@ -27,7 +27,7 @@ export default class RepuestoSiniestroController {
   }
 
   create = async (req, res) => {
-    const newRepuestoSiniestro = validateRepuestoSiniestro(res.body);
+    const newRepuestoSiniestro = validateRepuestoSiniestro(req.body);
 
     if (!newRepuestoSiniestro.success) {
       return res.status(400).json({ error: newRepuestoSiniestro.error })
@@ -41,7 +41,7 @@ export default class RepuestoSiniestroController {
 
     const nombreExits = await this.repuestoSiniestroModel.getByNombreAndInspeccion(newRepuestoSiniestro.data.nombre, newRepuestoSiniestro.data.inspeccion_siniestro_id);
 
-    if (nombreExits) {
+    if (nombreExits.length > 0) {
       return res.status(400).json({ error: "Ya existe un repuesto con este nombre" })
     }
 
@@ -56,15 +56,21 @@ export default class RepuestoSiniestroController {
 
   update = async (req, res) => {
     const { id } = req.params;
-    const newRepuestoSiniestro = validatePartialRepuestoSiniestro(res.body);
+    const newRepuestoSiniestro = validatePartialRepuestoSiniestro(req.body);
 
     if (!newRepuestoSiniestro.success) {
       return res.status(400).json({ error: newRepuestoSiniestro.error })
     }
 
-    const nombreExits = await this.repuestoSiniestroModel.getByNombreAndInspeccion(newRepuestoSiniestro.data.nombre, newRepuestoSiniestro.data.inspeccion_siniestro_id);
+    const repuestoSiniestroExist = await this.repuestoSiniestroModel.getById(id);
 
-    if (nombreExits) {
+    if (!repuestoSiniestroExist) {
+      return res.status(404).json({ success: false, error: "No existe un repuesto con este id" })
+    }
+
+    const nombreExits = await this.repuestoSiniestroModel.getByNombreAndInspeccion(newRepuestoSiniestro.data.nombre, repuestoSiniestroExist.inspeccion_siniestro_id);
+
+    if (nombreExits.length > 0) {
       return res.status(400).json({ error: "Ya existe un repuesto con este nombre" })
     }
 

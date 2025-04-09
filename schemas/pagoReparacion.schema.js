@@ -3,7 +3,8 @@ import z from "zod";
 const pagoReparacionSchema = z.object({
   reparacion_id: z.number().int().positive(),
   pagante: z.number().int().positive(),
-  monto: z.number().positive()
+  monto: z.number().positive(),
+  fecha: z.string().date()
 })
 
 export function validatePagoReparacion(input){

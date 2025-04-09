@@ -47,7 +47,7 @@ export default class IndemnizacionController {
       return res.status(500).json({ error: "Error al crear indemnizacion" });
     }
 
-    res.status(201).json(result);
+    res.status(201).json(result.data);
   }
 
   update = async (req, res) => {
@@ -60,7 +60,11 @@ export default class IndemnizacionController {
 
     const result = await this.indemnizacionModel.update(id, indemnizacion.data);
 
-    res.json(result);
+    if (!result) {
+      return res.status(500).json({ error: "Error al actualizar indemnizacion" });
+    }
+
+    res.json({ success: true });
   }
 
   delete = async (req, res) => {
@@ -68,12 +72,12 @@ export default class IndemnizacionController {
 
     const reparacionExist = await this.reparacionModel.getByIndemnizacion(id)
 
-    if (reparacionExist)
+    if (reparacionExist.length > 0)
       return res.status(400).json({ success: false, error: "La indemnizacion tiene reparaciones registradas" })
 
     const inspeccionIndemnizacionExist = await this.inspeccionIndemnizacionModel.getByIndemnizacion(id)
 
-    if (inspeccionIndemnizacionExist)
+    if (inspeccionIndemnizacionExist.length > 0)
       return res.status(400).json({ success: false, error: "La indemnizacion tiene inspecciones registradas" })
 
     const result = await this.indemnizacionModel.delete(id);

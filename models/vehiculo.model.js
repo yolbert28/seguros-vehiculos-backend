@@ -8,9 +8,15 @@ export default class VehiculoModel {
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM vehiculo WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT * FROM vehiculo WHERE matricula = ?", [id]);
 
     return result.rows[0];
+  }
+
+  static async getByModelo (modeloId) {
+    const result = await turso.execute("SELECT * FROM vehiculo WHERE modelo_id = ?", [modeloId]);
+
+    return result.rows;
   }
 
   static async getByPoliza(poliza_id) {
@@ -26,7 +32,7 @@ export default class VehiculoModel {
     const fecha = new Date().toISOString().slice(0, 10);
 
     try {
-      const result = await turso.execute("INSERT INTO vehiculo (matricula, poliza_id, modelo_id, riesgo_id, capacidad_carga, anno, valoracion, ultima_actualizacion) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;", [matricula, poliza_id, modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha]);
+      const result = await turso.execute("INSERT INTO vehiculo (matricula, poliza_id, modelo_id, riesgo_id, capacidad_carga, anno, valoracion, ultima_actualizacion) VALUES (?, ?, ?, ?, ?, ?, ?,?) RETURNING *;", [matricula, poliza_id, modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha]);
 
       return { success: true, data: result.rows[0] };
     } catch (error) {

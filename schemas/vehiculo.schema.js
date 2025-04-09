@@ -5,9 +5,9 @@ const vehiculoSchema = z.object({
   poliza_id: z.number().int().positive(),
   modelo_id: z.number().int().positive(),
   riesgo_id: z.number().int().positive(),
-  capacidad: z.number().int().positive(),
+  capacidad_carga: z.number().int().positive(),
   anno: z.number().int().positive(),
-  valoracion: z.number().positive()
+  valoracion: z.number().positive(),
 });
 
 export function validateVehiculo(input) {

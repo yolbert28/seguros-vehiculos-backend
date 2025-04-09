@@ -1,9 +1,10 @@
 import { validatePartialReporteSiniestro, validateReporteSiniestro } from "../schemas/reporteSiniestro.schema.js";
 
 export default class ReporteSiniestroController {
-  constructor({ reporteSiniestroModel, clienteModel }) {
+  constructor({ reporteSiniestroModel, clienteModel, siniestroModel }) {
     this.reporteSiniestroModel = reporteSiniestroModel;
     this.clienteModel = clienteModel;
+    this.siniestroModel = siniestroModel;
   }
 
   getAll = async (req, res) => {
@@ -41,7 +42,7 @@ export default class ReporteSiniestroController {
       return res.status(400).json({ error: "No existe el cliente" });
     }
 
-    const result = await this.reporteSiniestroModel.create(newReporte);
+    const result = await this.reporteSiniestroModel.create(newReporte.data);
 
     if (!result.success) {
       return res.status(400).json({error: "Error creating reporte"});
@@ -70,10 +71,15 @@ export default class ReporteSiniestroController {
   delete = async (req, res) => {
     const { id } = req.params;
 
+    const siniestroExist = await this.siniestroModel.getByReporteSiniestro(id);
+
+    if(siniestroExist)
+      return res.status(400).json({ success: false, error: "No se puede eliminar el reporte, ya que tiene un siniestro asociado" });
+
     const result = await this.reporteSiniestroModel.delete(id);
 
     if (!result) {
-      return res.status(400).json({error: "Error deleting reporte"});
+      return res.status(400).json({success: false, error: "Error deleting reporte"});
     }
 
     res.status(200).json({ success: true });

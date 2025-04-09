@@ -7,11 +7,11 @@ export default class CoberturaServicioModel {
       [coberturaId, servicioId]
     )
 
-    return result.rows;
+    return result.rows[0];
   }
 
-  static async getByCobertura (id) {
-    const result = await turso.execute("SELECT * FROM cobertura_servicio WHERE cobertura_id = ?",
+  static async getByServicio (id) {
+    const result = await turso.execute("SELECT * FROM cobertura_servicio WHERE servicio_id = ?",
       [id]
     )
 
@@ -28,7 +28,7 @@ export default class CoberturaServicioModel {
         [cobertura_id, servicio_id]);
       return true;
     } catch (e) {
-      console.error(e);
+      console.log(e);
       return false;
     }
   }

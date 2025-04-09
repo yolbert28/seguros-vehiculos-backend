@@ -13,6 +13,12 @@ export default class SiniestroModel {
     return result.rows[0];
   }
 
+  static async getByReporteSiniestro(id) {
+    const result = await turso.execute("SELECT * FROM siniestro WHERE reporte_siniestro_id = ?", [id]);
+
+    return result.rows[0];
+  }
+
   static async getByVehiculo(matricula) {
     const result = await turso.execute("SELECT * FROM siniestro WHERE vehiculo_mat = ?", [matricula]);
 

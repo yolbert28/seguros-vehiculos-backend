@@ -11,7 +11,7 @@ export default class MarcaModel {
   static async getById(id) {
     const result = await turso.execute("SELECT * FROM marca WHERE id = ?", [id]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByNombre(nombre) {

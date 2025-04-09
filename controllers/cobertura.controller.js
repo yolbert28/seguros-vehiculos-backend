@@ -82,7 +82,7 @@ export default class CoberturaController {
 
     const hasCoberturaServicio = await this.coberturaServicioModel.getByCobertura(id)
 
-    if (hasCoberturaServicio) {
+    if (hasCoberturaServicio.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar porque se encuentra siendo utilizado por algunos servicios" })
     }
 

@@ -37,9 +37,15 @@ export default class VehiculoController {
       return res.status(400).json({ error: newVehiculo.error });
     }
 
+    const vehiculoExist = await this.vehiculoModel.getById(newVehiculo.data.matricula);
+
+    if (vehiculoExist) {
+      return res.status(400).json({ error: "Ya existe un vehiculo con esa matricula" });
+    }
+
     const polizaExist = await this.polizaModel.getById(newVehiculo.data.poliza_id);
 
-    if (polizaExist.length === 0) {
+    if (!polizaExist) {
       return res.status(400).json({ error: "No existe la poliza" });
     }
 

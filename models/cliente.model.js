@@ -11,13 +11,13 @@ export default class ClienteModel {
   static async getById(documento) {
     const result = await turso.execute("SELECT * FROM cliente WHERE documento = ?", [documento]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByEmail(correo) {
     const result = await turso.execute("SELECT * FROM cliente WHERE correo = ?", [correo]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByEmailAndNotId(correo, documento) {

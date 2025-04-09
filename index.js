@@ -34,7 +34,6 @@ import polizaModel from './models/poliza.model.js';
 import primaModel from './models/prima.model.js';
 import repuestoSiniestroModel from './models/repuestoSiniestro.model.js';
 import tallerModel from './models/taller.model.js';
-import repuestoSiniestroModel from './models/repuestoSiniestro.model.js';
 import evidenciaModel from './models/evidencia.model.js';
 import vehiculoModel from './models/vehiculo.model.js';
 import mantenimientoModel from './models/mantenimiento.model.js';
@@ -63,14 +62,14 @@ const PORT = process.env.PORT || 3000;
 app.use("/client", createClienteRouter({ clienteModel, polizaModel, reporteSiniestroModel }))
 app.use("/coverage", createCoberturaRouter({ coberturaModel, coberturaServicioModel }))
 app.use("/service", createServicioRouter({ servicioModel, coberturaServicioModel, polizaServicioModel }))
-app.use("/brand", createMarcaRouter({ marcaModel }))
+app.use("/brand", createMarcaRouter({ marcaModel, modeloModel }))
 app.use("/model", createModeloRouter({ modeloModel, marcaModel, vehiculoModel }))
 app.use("/employee", createEmpleadoRouter({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel }))
 app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel, polizaServicioModel, vehiculoModel, primaModel }))
 app.use("/premium", createPrimaRouter({ primaModel, polizaModel }))
 app.use("/accidentRepair", createRepuestoSiniestroRouter({ repuestoSiniestroModel, inspeccionSiniestroModel }))
 app.use("/workshop", createTallerRouter({ tallerModel, reparacionModel, mantenimientoModel }))
-app.use("/accidentReport", createReporteSiniestroRouter({ reporteSiniestroModel, clienteModel }))
+app.use("/accidentReport", createReporteSiniestroRouter({ reporteSiniestroModel, clienteModel, siniestroModel }))
 app.use("/evidence", createEvidenciaRouter({ evidenciaModel, siniestroModel }))
 app.use("/vehicle", createVehiculoRouter({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }))
 app.use("/maintenance", createMantenimientoRouter({ mantenimientoModel, vehiculoModel, tallerModel }))

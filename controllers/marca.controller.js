@@ -68,15 +68,9 @@ export default class MarcaController {
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const marcaExist = await this.marcaModel.getById(id);
-
-    if (marcaExist.length === 0) {
-      return res.status(400).json({ success: false, error: "No existe una marca con el id: " + id });
-    }
-
     const hasModels = await this.modeloModel.getByMarca(id);
 
-    if (hasModels) {
+    if (hasModels.length > 0) {
       return res.status(400).json({ success: false, error: "La marca tiene modelos a su cargo" });
     }
 

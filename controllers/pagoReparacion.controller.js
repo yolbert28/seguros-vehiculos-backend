@@ -39,9 +39,13 @@ export default class PagoReparacionController {
       return res.status(400).json({ error: "Reparacion no existe" });
     }
 
-    const result = await this.pagoReparacionModel.create(pagoReparacion);
+    const result = await this.pagoReparacionModel.create(pagoReparacion.data);
 
-    res.status(201).json(result);
+    if (!result.success) {
+      return res.status(500).json({ error: "Error al crear el pago" });
+    }
+
+    res.status(201).json(result.data);
   }
 
   update = async (req, res) => {
@@ -54,7 +58,10 @@ export default class PagoReparacionController {
 
     const result = await this.pagoReparacionModel.update(id, pagoReparacion.data);
 
-    res.json(result);
+    if(!result)
+      return res.status(500).json({ success: false, error: "Error al actualizar el pago" });
+
+    res.json({success: true});
   }
 
   delete = async (req, res) => {

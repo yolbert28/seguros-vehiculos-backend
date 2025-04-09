@@ -9,6 +9,7 @@ export default function createEmpleadoRoute({ empleadoModel, inspeccionSiniestro
   route.get("/", empleadoController.getAll);
   route.get("/:documento", empleadoController.getById);
   route.post("/", empleadoController.create);
+  route.post("/login", empleadoController.login);
   route.put("/password/:documento", empleadoController.changePassword);
   route.put("/:documento", empleadoController.update);
   route.delete("/:documento", empleadoController.delete);

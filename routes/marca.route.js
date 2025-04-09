@@ -1,10 +1,10 @@
 import { Router } from "express";
 import MarcaController from "../controllers/marca.controller.js";
 
-export default function createMarcaRouter({ marcaModel }) {
+export default function createMarcaRouter({ marcaModel, modeloModel }) {
   const router = Router();
 
-  const marcaController = new MarcaController({ marcaModel });
+  const marcaController = new MarcaController({ marcaModel, modeloModel });
 
   router.get("/", marcaController.getAll);
   router.get("/:id", marcaController.getById);

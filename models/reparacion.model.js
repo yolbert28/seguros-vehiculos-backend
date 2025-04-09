@@ -1,31 +1,31 @@
-import { turso } from "./connection/dbConnection";
+import { turso } from "./connection/dbConnection.js";
 
 export default class ReparacionModel {
-  async getAll() {
+  static async getAll() {
     const result = await turso.execute("SELECT * FROM reparacion");
 
     return result.rows;
   }
 
-  async getById(id) {
+  static async getById(id) {
     const result = await turso.execute("SELECT * FROM reparacion WHERE id = ?", [id]);
 
     return result.rows[0];
   }
 
-  async getByTaller(taller_rif) {
+  static async getByTaller(taller_rif) {
     const result = await turso.execute("SELECT * FROM reparacion WHERE taller_rif = ?", [taller_rif]);
 
     return result.rows;
   }
 
-  async getByIndemnizacion(id) {
+  static async getByIndemnizacion(id) {
     const result = await turso.execute("SELECT * FROM reparacion WHERE indemnizacion_id = ?", [id]);
 
     return result.rows;
   }
 
-  async create(reparacion) {
+  static async create(reparacion) {
     const { indemnizacion_id, taller_rif, descripcion, monto } = reparacion;
 
     try {
@@ -38,11 +38,11 @@ export default class ReparacionModel {
     }
   }
 
-  async update(id, reparacion) {
-    const { taller_rif, descripcion, monto } = reparacion;
+  static async update(id, reparacion) {
+    const { descripcion, monto } = reparacion;
 
     try {
-      const result = await turso.execute("UPDATE reparacion SET taller_rif = ?, descripcion = ?, monto = ? WHERE id = ? ", [taller_rif, descripcion, monto, id]);
+      const result = await turso.execute("UPDATE reparacion SET descripcion = ?, monto = ? WHERE id = ? ", [descripcion, monto, id]);
 
       return true
     } catch (error) {
@@ -51,7 +51,7 @@ export default class ReparacionModel {
     }
   }
 
-  async delete(id) {
+  static async delete(id) {
     try {
       const result = await turso.execute("DELETE FROM reparacion WHERE id = ?", [id]);
 

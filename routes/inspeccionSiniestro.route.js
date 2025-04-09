@@ -8,7 +8,7 @@ export default function createInspeccionSiniestroRouter({ inspeccionSiniestroMod
 
   route.get("/", inspeccionSiniestroController.getAll);
   route.get("/:id", inspeccionSiniestroController.getById);
-  route.get("/siniestro/:id", inspeccionSiniestroController.getBySiniestroId);
+  route.get("/sinister/:id", inspeccionSiniestroController.getBySiniestroId);
   route.get("/inspector/:doc", inspeccionSiniestroController.getByInspectorDoc);
   route.post("/", inspeccionSiniestroController.create);
   route.put("/:id", inspeccionSiniestroController.update);

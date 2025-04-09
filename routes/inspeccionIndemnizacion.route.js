@@ -1,5 +1,5 @@
 import { Router } from "express";
-import InspeccionIndemnizacionController from "../controllers/inspeccionIndemnizacion.controller";
+import InspeccionIndemnizacionController from "../controllers/inspeccionIndemnizacion.controller.js";
 
 export default function createInspeccionIndemnizacionRouter({ inspeccionIndemnizacionModel, indemnizacionModel, empleadoModel }) {
   const route = Router();
@@ -8,7 +8,7 @@ export default function createInspeccionIndemnizacionRouter({ inspeccionIndemniz
 
   route.get("/", inspeccionIndemnizacionController.getAll);
   route.get("/:id", inspeccionIndemnizacionController.getById);
-  route.get("/indemnizacion/:id", inspeccionIndemnizacionController.getByIndemnizacion);
+  route.get("/indemnity/:id", inspeccionIndemnizacionController.getByIndemnizacion);
   route.get("/inspector/:doc", inspeccionIndemnizacionController.getByInspectorDoc);
   route.post("/", inspeccionIndemnizacionController.create);
   route.put("/:id", inspeccionIndemnizacionController.update);

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import VehiculoController from "../controllers/vehiculo.controller";
+import VehiculoController from "../controllers/vehiculo.controller.js";
 
 export default function createVehiculoRouter({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }) {
   const route = Router();

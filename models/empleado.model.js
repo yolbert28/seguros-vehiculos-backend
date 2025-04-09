@@ -2,13 +2,13 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class EmpleadoModel {
   static async getAll() {
-    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado  FROM empleado");
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id  FROM empleado");
 
     return result.rows;
   }
 
   static async getById(documento) {
-    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado FROM empleado WHERE documento = ?", [documento]);
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id FROM empleado WHERE documento = ?", [documento]);
 
     return result.rows[0];
   }
@@ -20,13 +20,13 @@ export default class EmpleadoModel {
   }
   
   static async getByCorreo(correo) {
-    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado  FROM empleado WHERE correo = ?", [correo]);
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id  FROM empleado WHERE correo = ?", [correo]);
 
     return result.rows[0];
   }
 
   static async getByCorreoAndNotDocumento(correo, documento) {
-    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado FROM empleado WHERE correo = ? AND documento != ?", [correo, documento]);
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id FROM empleado WHERE correo = ? AND documento != ?", [correo, documento]);
 
     return result.rows[0];
   }
@@ -40,7 +40,7 @@ export default class EmpleadoModel {
         [documento, nombre, correo, telefono, tipo_empleado, contrasena]
       );
 
-      const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado FROM empleado WHERE documento = ?", [documento]);
+      const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id FROM empleado WHERE documento = ?", [documento]);
 
       return {success: true, data:result.rows[0]};
     } catch (error) {

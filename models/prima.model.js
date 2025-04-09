@@ -14,6 +14,12 @@ export default class PrimaModel {
     return result.rows[0];
   }
 
+  static async getByPoliza(poliza_id) {
+    const result = await turso.execute("SELECT * FROM prima WHERE poliza_id = ?", [poliza_id])
+
+    return result.rows;
+  }
+
   static async create(input) {
     const { poliza_id, monto, fecha } = input;
 

@@ -24,9 +24,9 @@ export default class PolizaController {
   }
 
   getByCliente = async (req, res) => {
-    const { documento } = req.params;
-
-    const result = await this.polizaModel.getByCliente(documento);
+    const { document } = req.params;
+    
+    const result = await this.polizaModel.getByCliente(document);
 
     return res.json(result);
   }
@@ -89,14 +89,14 @@ export default class PolizaController {
 
     const polizaServicioExist = await this.polizaServicioModel.getById(id, servicioId);
 
-    if (polizaServicioExist) {
-      return res.status(400).json({ success: true, error: "La poliza ya contiene este servicio" })
+    if (polizaServicioExist.length > 0) {
+      return res.status(400).json({ success: false, error: "La poliza ya contiene este servicio" })
     }
 
     const result = await this.polizaServicioModel.create({ poliza_id: id, servicio_id: servicioId })
 
-    if (result)
-      return res.status(500).json({ success: true, error: "Error al agregar el servicio a la poliza" })
+    if (!result)
+      return res.status(500).json({ success: false, error: "Error al agregar el servicio a la poliza" })
 
     res.status(200).json({ success: true })
   }
@@ -123,12 +123,12 @@ export default class PolizaController {
 
     const vehiculoExist = await this.vehiculoModel.getByPoliza(id);
 
-    if (vehiculoExist)
+    if (vehiculoExist.length > 0)
       return res.status(400).json({ success: false, error: "La poliza tiene vehiculos a su cargo" })
 
     const primaExist = await this.primaModel.getByPoliza(id);
 
-    if (primaExist)
+    if (primaExist.length > 0)
       return res.status(400).json({ success: false, error: "La poliza tiene primas registradas" })
 
     const result = await this.polizaModel.delete(id);

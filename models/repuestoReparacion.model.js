@@ -10,7 +10,7 @@ export default class RepuestoReparacionModel {
   static async getById(id) {
     const result = await turso.execute("SELECT * FROM repuesto_reparacion WHERE id = ?", [id]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByReparacion(reparacion_id) {

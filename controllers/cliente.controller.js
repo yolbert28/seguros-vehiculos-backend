@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 export default class ClienteController {
   constructor({ clienteModel, polizaModel, reporteSiniestroModel }) {
     this.clienteModel = clienteModel;
-    this.poliza = polizaModel;
+    this.polizaModel = polizaModel;
     this.reporteSiniestroModel = reporteSiniestroModel;
   }
 
@@ -42,7 +42,7 @@ export default class ClienteController {
 
     const documentoExist = await this.clienteModel.getById(newCliente.data.documento);
 
-    if (documentoExist.length > 0) {
+    if (documentoExist) {
       return res.status(400).json({
         success: false, error: "Documento ya registrado"
       });
@@ -50,7 +50,7 @@ export default class ClienteController {
 
     const emailExist = await this.clienteModel.getByEmail(newCliente.data.correo);
 
-    if (emailExist.length > 0) {
+    if (emailExist) {
       return res.status(400).json({
         success: false, error: "Correo ya registrado"
       });
@@ -80,7 +80,7 @@ export default class ClienteController {
 
     const documentoExist = await this.clienteModel.getById(documento);
 
-    if (documentoExist.length === 0) {
+    if (!documentoExist) {
       return res.status(400).json({
         success: false, error: "Documento no registrado"
       });
@@ -108,13 +108,13 @@ export default class ClienteController {
 
     const polizaExist = await this.polizaModel.getByCliente(documento);
 
-    if (polizaExist) {
+    if (polizaExist.length > 0) {
       return res.status(400).json({ success: false, error: "El cliente tiene polizas a su nombre" })
     }
 
     const reporteSiniestroExist = await this.reporteSiniestroModel.getByCliente(documento)
 
-    if (reporteSiniestroExist) {
+    if (reporteSiniestroExist.length > 0) {
       return res.status(400).json({ success: true, error: "El cliente tiene reportes registrados" })
     }
     
@@ -134,6 +134,12 @@ export default class ClienteController {
     if (!newContrasena.success) {
       return res.status(400).json({
         success: false, error: newContrasena.error
+      });
+    }
+
+    if(!newContrasena.data.contrasena) {
+      return res.status(400).json({
+        success: false, error: "Contraseña no valida"
       });
     }
 

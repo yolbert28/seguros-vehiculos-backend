@@ -1,3 +1,5 @@
+import { turso } from "./connection/dbConnection.js";
+
 export default class ReporteSiniestroModel {
   static async getAll() {
     const result = await turso.execute("SELECT * FROM reporte_siniestro");
@@ -21,7 +23,7 @@ export default class ReporteSiniestroModel {
     const { cliente_doc, descripcion, direccion, fecha } = reporteSiniestro;
 
     try {
-      const result = await turso.execute("INSERT INTO reporte_siniestro (cliente_doc, descripcion, direccion, fecha, atendido) VALUES (?, ?, ?, ?, TRUE) RETURNING *;", [cliente_doc, descripcion, direccion, fecha]);
+      const result = await turso.execute("INSERT INTO reporte_siniestro (cliente_doc, descripcion, direccion, fecha, atendido) VALUES (?, ?, ?, ?, FALSE) RETURNING *;", [cliente_doc, descripcion, direccion, fecha]);
 
       return { success: true, data: result.rows[0] };
     } catch (error) {
@@ -31,10 +33,10 @@ export default class ReporteSiniestroModel {
   }
 
   static async update(id, reporteSiniestro) {
-    const { descripcion, direccion } = reporteSiniestro;
+    const { descripcion, direccion, atendido } = reporteSiniestro;
 
     try {
-      await turso.execute("UPDATE reporte_siniestro SET cliente_doc = ?, descripcion = ?, direccion = ? WHERE id = ?", [descripcion, direccion, id]);
+      await turso.execute("UPDATE reporte_siniestro SET descripcion = ?, direccion = ?, atendido = ? WHERE id = ?", [descripcion, direccion, atendido, id]);
 
       return true;
     } catch (error) {

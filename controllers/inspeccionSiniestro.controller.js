@@ -85,15 +85,15 @@ export default class InspeccionSiniestroController {
 
     const repuestoSiniestroExist = await this.repuestoSiniestroModel.getByInspeccion(id)
 
-    if(repuestoSiniestroExist)
-      return res.status(400).json({success: false, error: "La inspeccion tiene repuestos asociados"})
-    
+    if (repuestoSiniestroExist.length > 0)
+      return res.status(400).json({ success: false, error: "La inspeccion tiene repuestos asociados" })
+
     const result = await this.inspeccionSiniestroModel.delete(id);
 
     if (result) {
       res.json({ success: true });
     } else {
-      res.status(500).json({success: false, error: "Error al eliminar inspeccion siniestro" });
+      res.status(500).json({ success: false, error: "Error al eliminar inspeccion siniestro" });
     }
   }
 

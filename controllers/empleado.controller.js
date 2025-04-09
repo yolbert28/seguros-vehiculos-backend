@@ -90,28 +90,22 @@ export default class EmpleadoController {
 
     const inspeccionSiniestroExists = await this.inspeccionSiniestroModel.getByInspector(documento);
 
-    if(inspeccionSiniestroExists) {
+    if(inspeccionSiniestroExists.length > 0) {
       return res.status(400).json({ success: false, error: "El inspector tiene inspecciones de siniestro" });
     }
 
     const inspeccionIndemnizacionExists = await this.inspeccionIndemnizacionModel.getByInspector(documento);
 
-    if(inspeccionIndemnizacionExists) {
+    if(inspeccionIndemnizacionExists.length > 0) {
       return res.status(400).json({ success: false, error: "El inspector tiene inspecciones de indemnizacion" });
     }
 
     const polizaExists = await this.polizaModel.getByAsesor(documento);
 
-    if(polizaExists) {
+    if(polizaExists.length > 0) {
       return res.status(400).json({ success: false, error: "El asesor tiene polizas" });
     }
-
-    const documentoExists = await this.empleadoModel.getById(documento);
-
-    if (!documentoExists) {
-      return res.status(400).json({ success: false,error: "Documento no existe" });
-    }
-
+    
     const result = await this.empleadoModel.delete(documento);
 
     if(!result)
