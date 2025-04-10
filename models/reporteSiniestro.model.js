@@ -13,6 +13,12 @@ export default class ReporteSiniestroModel {
     return result.rows[0];
   }
 
+  static async getByNotAtendido() {
+    const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE atendido = FALSE ORDER BY id DESC");
+
+    return result.rows;
+  }
+
   static async getByCliente(documento) {
     const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE cliente_doc = ?", [documento]);
 

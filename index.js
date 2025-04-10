@@ -49,6 +49,7 @@ import inspeccionSiniestroModel from './models/inspeccionSiniestro.model.js';
 import repuestoReparacionModel from './models/repuestoReparacion.model.js';
 import coberturaServicioModel from './models/coberturaServicio.model.js';
 import polizaServicioModel from './models/polizaServicio.model.js';
+import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
 
 const app = express();
 
@@ -68,6 +69,19 @@ const io = new Server(server, {
     }
 })
 
+io.use(verifyTokenSocket);
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+  
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+    
+    socket.on("report", async () => {
+        io.emit("report", await reporteSiniestroModel.getByNotAtendido());
+    })
+  })
 
 const PORT = process.env.PORT || 3000;
 

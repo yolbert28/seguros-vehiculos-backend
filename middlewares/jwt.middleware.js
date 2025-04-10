@@ -21,3 +21,21 @@ export const verifyToken = (req, res, next) => {
     return res.status(401).json({ error: e.message });
   }
 };
+
+export const verifyTokenSocket = (socket, next) => {
+  let token = socket.handshake.auth.token;
+
+  if (!token) {
+    return next(new Error("No token provided"));
+  }
+
+  try {
+    const { documento } = jwt.verify(token, process.env.JWT_SECRET);
+
+    socket.documento = documento;
+
+    next();
+  } catch (e) {
+    return next(new Error(e.message));
+  }
+}
