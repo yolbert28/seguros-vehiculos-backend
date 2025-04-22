@@ -51,6 +51,7 @@ import coberturaServicioModel from './models/coberturaServicio.model.js';
 import polizaServicioModel from './models/polizaServicio.model.js';
 import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
 import Mailer from './utils/mailer.js';
+import { corsMiddleware } from './middlewares/cors.middleware.js';
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.disable('x-powered-by');
 
 app.use(json());
 
+app.use(corsMiddleware());
 
 const server = createServer(app)
 const io = new Server(server, {
