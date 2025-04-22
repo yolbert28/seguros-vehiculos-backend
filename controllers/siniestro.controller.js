@@ -22,6 +22,18 @@ export default class SiniestroController {
 
     const siniestro = await this.siniestroModel.getById(id);
 
+    const evidencias = await this.evidenciaModel.getBySiniestro(id);
+
+    const inspeccionSiniestro = await this.inspeccionSiniestroModel.getBySiniestro(id);
+
+    const indemnizacion = await this.indemnizacionModel.getBySiniestro(id);
+
+    if (siniestro) {
+      siniestro.evidencias = evidencias;
+      siniestro.inspeccionSiniestro = inspeccionSiniestro;
+      siniestro.indemnizacion = indemnizacion;
+    }
+
     res.json(siniestro);
   }
 

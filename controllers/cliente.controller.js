@@ -1,5 +1,6 @@
 import { validateCliente, validatePartialCliente } from "../schemas/cliente.schema.js";
 import bcrypt from "bcryptjs";
+import { validateCredenciales } from "../schemas/credenciales.schema.js";
 
 export default class ClienteController {
   constructor({ clienteModel, polizaModel, reporteSiniestroModel }) {
@@ -19,6 +20,15 @@ export default class ClienteController {
     const { documento } = req.params;
 
     const result = await this.clienteModel.getById(documento);
+
+    const resultPolizas = await this.polizaModel.getByCliente(documento);
+
+    const reporteSiniestro = await this.reporteSiniestroModel.getByCliente(documento);
+
+    if (result){
+      result.polizas = resultPolizas;
+      result.reporteSiniestro = reporteSiniestro;
+    }
 
     res.json(result);
   }
@@ -117,7 +127,7 @@ export default class ClienteController {
     if (reporteSiniestroExist.length > 0) {
       return res.status(400).json({ success: true, error: "El cliente tiene reportes registrados" })
     }
-    
+
     const result = await this.clienteModel.delete(documento);
 
     if (!result) {
@@ -125,6 +135,34 @@ export default class ClienteController {
     }
 
     res.json({ success: true });
+  }
+
+  login = async (req, res) => {
+    const credentials = validateCredenciales(req.body);
+
+    if (!credentials.success) {
+      return res.status(400).json({ success: false, error: credentials.error });
+    }
+
+    const { documento, contrasena } = credentials.data;
+
+    const user = await this.clienteModel.getContrasena(documento);
+
+    if (!user) {
+      return res.status(400).json({ success: false, error: "Credenciales invalidas" });
+    }
+
+    const isMatch = await bcrypt.compare(contrasena, user.contrasena);
+
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ success: false, error: "Credenciales invalidas" });
+    }
+
+    const token = jwt.sign({ documento: documento }, process.env.JWT_SECRET, { expiresIn: 14400 });
+
+    return res.status(200).json({ token });
   }
 
   changePassword = async (req, res) => {
@@ -137,7 +175,7 @@ export default class ClienteController {
       });
     }
 
-    if(!newContrasena.data.contrasena) {
+    if (!newContrasena.data.contrasena) {
       return res.status(400).json({
         success: false, error: "Contraseña no valida"
       });

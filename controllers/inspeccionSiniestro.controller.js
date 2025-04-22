@@ -18,6 +18,11 @@ export default class InspeccionSiniestroController {
     const { id } = req.params;
     const inspeccionSiniestro = await this.inspeccionSiniestroModel.getById(id);
 
+    if (inspeccionSiniestro) {
+      const empleado = await this.empleadoModel.getById(inspeccionSiniestro.inspector_doc);
+      inspeccionSiniestro.inspector = empleado;
+    }
+
     res.json(inspeccionSiniestro);
   }
 

@@ -13,6 +13,24 @@ export default class MantenimientoModel {
     return result.rows[0];
   }
 
+  static async getIfExpiresInTenDays(){
+    const result = await turso.execute("SELECT c.nombre, c.correo, v.matricula, p.id, mo.nombre as modelo, ma.nombre as marca FROM mantenimiento m, vehiculo v, poliza p, cliente c, modelo mo, marca ma WHERE m.vehiculo_mat = v.matricula AND v.poliza_id = p.id AND p.cliente_doc = c.documento AND mo.id = v.modelo_id AND mo.marca_id = ma.id AND DATE(fecha,'+1 months') = Date('now', '+10 days');");
+
+    return result.rows;
+  }
+
+  static async getIfExpiresInThreeDays(){
+    const result = await turso.execute("SELECT c.nombre, c.correo, v.matricula, p.id, mo.nombre as modelo, ma.nombre as marca FROM mantenimiento m, vehiculo v, poliza p, cliente c, modelo mo, marca ma WHERE m.vehiculo_mat = v.matricula AND v.poliza_id = p.id AND p.cliente_doc = c.documento AND mo.id = v.modelo_id AND mo.marca_id = ma.id AND DATE(fecha,'+1 months') = Date('now', '+3 days');");
+
+    return result.rows;
+  }
+
+  static async getIfExpiresToday(){
+    const result = await turso.execute("SELECT c.nombre, c.correo, v.matricula, p.id, mo.nombre as modelo, ma.nombre as marca FROM mantenimiento m, vehiculo v, poliza p, cliente c, modelo mo, marca ma WHERE m.vehiculo_mat = v.matricula AND v.poliza_id = p.id AND p.cliente_doc = c.documento AND mo.id = v.modelo_id AND mo.marca_id = ma.id AND DATE(fecha,'+1 months') = Date('now');");
+
+    return result.rows;
+  }
+
   static async getByVehiculo(matricula) {
     const result = await turso.execute("SELECT * FROM mantenimiento WHERE vehiculo_mat = ?", [matricula]);
 

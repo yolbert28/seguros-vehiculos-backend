@@ -3,25 +3,31 @@ import { turso } from "./connection/dbConnection.js";
 export default class ClienteModel {
 
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM cliente");
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, direccion FROM cliente");
 
     return result.rows;
   }
 
   static async getById(documento) {
-    const result = await turso.execute("SELECT * FROM cliente WHERE documento = ?", [documento]);
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, direccion FROM cliente WHERE documento = ?", [documento]);
 
     return result.rows[0];
   }
 
   static async getByEmail(correo) {
-    const result = await turso.execute("SELECT * FROM cliente WHERE correo = ?", [correo]);
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, direccion FROM cliente WHERE correo = ?", [correo]);
+
+    return result.rows[0];
+  }
+
+  static async getContrasena(documento) {
+    const result = await turso.execute("SELECT contrasena FROM cliente WHERE documento = ?", [documento]);
 
     return result.rows[0];
   }
 
   static async getByEmailAndNotId(correo, documento) {
-    const result = await turso.execute("SELECT * FROM cliente WHERE correo = ? AND documento != ?", [correo, documento]);
+    const result = await turso.execute("SELECT documento, nombre, correo, telefono, direccion FROM cliente WHERE correo = ? AND documento != ?", [correo, documento]);
 
     return result.rows;
   }

@@ -17,6 +17,11 @@ export default class MarcaController {
 
     const marca = await this.marcaModel.getById(id);
 
+    const resultModel = await this.modeloModel.getByMarca(id);
+
+    if(marca)
+      marca.modelos = resultModel;
+
     res.status(200).json(marca);
   };
 

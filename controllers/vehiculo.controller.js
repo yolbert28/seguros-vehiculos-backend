@@ -1,11 +1,12 @@
 import { validatePartialVehiculo, validateVehiculo } from "../schemas/vehiculo.schema.js";
 
 export default class VehiculoController {
-  constructor({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }) {
+  constructor({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel, modeloModel }) {
     this.vehiculoModel = vehiculoModel;
     this.polizaModel = polizaModel;
     this.siniestroModel = siniestroModel;
     this.mantenimientoModel = mantenimientoModel;
+    this.modeloModel = modeloModel;
   }
 
   getAll = async (req, res) => {
@@ -18,6 +19,12 @@ export default class VehiculoController {
     const { id } = req.params;
 
     const vehiculo = await this.vehiculoModel.getById(id);
+
+    const modelo = await this.modeloModel.getById(vehiculo.modelo_id);
+
+    if (vehiculo) {
+      vehiculo.modelo = modelo;
+    }
 
     res.json(vehiculo);
   }

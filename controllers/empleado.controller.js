@@ -25,6 +25,22 @@ export default class EmpleadoController {
     return res.json(result);
   }
 
+  getReportByMonth = async (req, res) => {
+    const { year, month } = req.params;
+
+    const result = await this.empleadoModel.getReportByMonth(year, month);
+
+    return res.json(result);
+  }
+
+  getReportByYear = async (req, res) => {
+    const { year } = req.params;
+
+    const result = await this.empleadoModel.getReportByYear(year);
+
+    return res.json(result);
+  }
+
   create = async (req, res) => {
     const newEmpleado = validateEmpleado(req.body);
 

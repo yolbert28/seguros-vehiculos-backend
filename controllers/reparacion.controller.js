@@ -19,6 +19,18 @@ export default class ReparacionController {
     const { id } = req.params;
     const reparacion = await this.reparacionModel.getById(id);
 
+    const repuestos = await this.repuestoReparacionModel.getByReparacion(id);
+
+    const pagos = await this.pagoReparacionModel.getByReparacion(id);
+
+    const taller = await this.tallerModel.getById(reparacion.taller_rif);
+
+    if (reparacion) {
+      reparacion.repuestos = repuestos;
+      reparacion.pagos = pagos;
+      reparacion.taller = taller;
+    }
+
     res.json(reparacion);
   }
 

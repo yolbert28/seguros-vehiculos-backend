@@ -2,6 +2,7 @@ import express, { json } from 'express';
 import "dotenv/config";
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
+import cron from 'node-cron';
 
 import createClienteRouter from './routes/cliente.route.js';
 import createCoberturaRouter from './routes/cobertura.route.js';
@@ -24,7 +25,6 @@ import createIndemnizacionRouter from './routes/indemnizacion.route.js';
 import createInspeccionIndemnizacionRouter from './routes/inspeccionIndemnizacion.route.js';
 import createInspeccionSiniestroRouter from './routes/inspeccionSiniestro.route.js';
 import createRepuestoReparacionRouter from './routes/repuestoReparacion.route.js';
-import { corsMiddleware } from './middlewares/cors.middleware.js';
 
 import clienteModel from './models/cliente.model.js';
 import coberturaModel from './models/cobertura.model.js';
@@ -50,6 +50,7 @@ import repuestoReparacionModel from './models/repuestoReparacion.model.js';
 import coberturaServicioModel from './models/coberturaServicio.model.js';
 import polizaServicioModel from './models/polizaServicio.model.js';
 import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
+import Mailer from './utils/mailer.js';
 
 const app = express();
 
@@ -57,7 +58,6 @@ app.disable('x-powered-by');
 
 app.use(json());
 
-app.use(corsMiddleware());
 
 const server = createServer(app)
 const io = new Server(server, {
@@ -65,23 +65,35 @@ const io = new Server(server, {
         maxDisconnectionDuration: 10000
     },
     cors: {
-        origin: "*"
+        origin: "http://127.0.0.1:5500"
     }
 })
 
+// Envia los correos de mantenimiento y poliza todos los dias a las 12:00 am
+// cron.schedule('minutos horas * * *')
+cron.schedule('00 00 * * *', () => {
+    Mailer.sendMailMantenimiento();
+    Mailer.sendMailPoliza();
+}, {
+    scheduled: true,
+    timezone: "America/Caracas"
+});
+
 io.use(verifyTokenSocket);
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     console.log('a user connected');
-  
+
+    socket.emit("report", await reporteSiniestroModel.getByNotAtendido());
+
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+        console.log('user disconnected');
     });
-    
+
     socket.on("report", async () => {
         io.emit("report", await reporteSiniestroModel.getByNotAtendido());
     })
-  })
+})
 
 const PORT = process.env.PORT || 3000;
 
@@ -97,7 +109,7 @@ app.use("/accidentRepair", createRepuestoSiniestroRouter({ repuestoSiniestroMode
 app.use("/workshop", createTallerRouter({ tallerModel, reparacionModel, mantenimientoModel }))
 app.use("/accidentReport", createReporteSiniestroRouter({ reporteSiniestroModel, clienteModel, siniestroModel }))
 app.use("/evidence", createEvidenciaRouter({ evidenciaModel, siniestroModel }))
-app.use("/vehicle", createVehiculoRouter({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel }))
+app.use("/vehicle", createVehiculoRouter({ vehiculoModel, polizaModel, siniestroModel, mantenimientoModel, modeloModel }))
 app.use("/maintenance", createMantenimientoRouter({ mantenimientoModel, vehiculoModel, tallerModel }))
 app.use("/sinister", createSiniestroRouter({ siniestroModel, reporteSiniestroModel, vehiculoModel, indemnizacionModel, inspeccionSiniestroModel, evidenciaModel }))
 app.use("/repairPayment", createPagoReparacionRouter({ pagoReparacionModel, reparacionModel }))

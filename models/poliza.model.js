@@ -19,6 +19,24 @@ export default class PolizaModel {
     return result.rows;
   }
 
+  static async getIfExpiresInTenDays() {
+    const result = await turso.execute("SELECT c.nombre, c.correo, p.id FROM poliza p, cliente c WHERE c.documento = p.cliente_doc AND Date(fecha_fin) = Date('now', '+10 days')");
+
+    return result.rows;
+  }
+
+  static async getIfExpiresInThreeDays() {
+    const result = await turso.execute("SELECT c.nombre, c.correo, p.id FROM poliza p, cliente c WHERE c.documento = p.cliente_doc AND Date(fecha_fin) = Date('now', '+3 days')");
+
+    return result.rows;
+  }
+
+  static async getIfExpiresToday() {
+    const result = await turso.execute("SELECT c.nombre, c.correo, p.id FROM poliza p, cliente c WHERE c.documento = p.cliente_doc AND Date(fecha_fin) = Date('now')");
+
+    return result.rows;
+  }
+
   static async getByAsesor(documento) {
     const result = await turso.execute("SELECT * FROM poliza WHERE asesor_doc = ?", [documento]);
 

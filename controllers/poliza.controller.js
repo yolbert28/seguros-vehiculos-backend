@@ -20,12 +20,24 @@ export default class PolizaController {
 
     const result = await this.polizaModel.getById(id);
 
+    const resultVehiculo = await this.vehiculoModel.getByPoliza(id);
+
+    const resultPrima = await this.primaModel.getByPoliza(id);
+
+    const empleado = await this.empleadoModel.getById(result.asesor_doc);
+
+    if (result){
+      result.vehiculos = resultVehiculo;
+      result.primas = resultPrima;
+      result.asesor = empleado;
+    }
+
     return res.json(result);
   }
 
   getByCliente = async (req, res) => {
     const { document } = req.params;
-    
+
     const result = await this.polizaModel.getByCliente(document);
 
     return res.json(result);
@@ -134,7 +146,7 @@ export default class PolizaController {
     const hasServicios = await this.polizaServicioModel.getByPoliza(id);
 
     if (hasServicios.length > 0) {
-        return res.status(400).json({ success: false, error: "La poliza tiene servicios asignados" })
+      return res.status(400).json({ success: false, error: "La poliza tiene servicios asignados" })
     }
 
     const result = await this.polizaModel.delete(id);

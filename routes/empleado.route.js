@@ -8,6 +8,8 @@ export default function createEmpleadoRoute({ empleadoModel, inspeccionSiniestro
 
   route.get("/", empleadoController.getAll);
   route.get("/:documento", empleadoController.getById);
+  route.get("/report/:year/:month", empleadoController.getReportByMonth);
+  route.get("/report/:year", empleadoController.getReportByYear);
   route.post("/", empleadoController.create);
   route.post("/login", empleadoController.login);
   route.put("/password/:documento", empleadoController.changePassword);

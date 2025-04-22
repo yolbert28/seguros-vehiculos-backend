@@ -18,6 +18,28 @@ export default class EmpleadoModel {
 
     return result.rows[0];
   }
+
+  static async getReportByMonth(year, month){
+
+    const fecha = year + '-' + month + '-__';
+
+    const result = await turso.execute("SELECT e.documento, e.nombre, e.correo, e.telefono, COUNT(p.asesor_doc) as contador FROM empleado e LEFT JOIN poliza p ON e.documento = p.asesor_doc AND fecha_creacion LIKE ? WHERE e.tipo_empleado_id = 2 GROUP BY e.documento, e.nombre, e.correo, e.telefono ORDER BY contador DESC", 
+      [fecha]
+    );
+
+    return result.rows;
+  }
+
+  static async getReportByYear(year){
+
+    const fecha = year + '-__-__';
+
+    const result = await turso.execute("SELECT e.documento, e.nombre, e.correo, e.telefono, COUNT(p.asesor_doc) as contador FROM empleado e LEFT JOIN poliza p ON e.documento = p.asesor_doc AND fecha_creacion LIKE ? WHERE e.tipo_empleado_id = 2 GROUP BY e.documento, e.nombre, e.correo, e.telefono ORDER BY contador DESC", 
+      [fecha]
+    );
+
+    return result.rows;
+  }
   
   static async getByCorreo(correo) {
     const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id  FROM empleado WHERE correo = ?", [correo]);
@@ -86,4 +108,5 @@ export default class EmpleadoModel {
       return false;
     }
   }
+
 }
