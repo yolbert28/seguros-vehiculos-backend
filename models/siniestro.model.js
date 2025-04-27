@@ -8,7 +8,7 @@ export default class SiniestroModel {
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT s.*, ts.nombre as tipo_siniestro, e.nombre as nombre_estado FROM siniestro s, tipo_siniestro ts, estado e WHERE s.tipo_siniestro_id = ts.id AND s.estado = e.id AND id = ?", [id]);
+    const result = await turso.execute("SELECT s.*, ts.nombre as tipo_siniestro, e.nombre as nombre_estado FROM siniestro s, tipo_siniestro ts, estado e WHERE s.tipo_siniestro_id = ts.id AND s.estado = e.id AND s.id = ?", [id]);
 
     return result.rows[0];
   }
