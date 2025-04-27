@@ -2,19 +2,19 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class EvidenciaModel {
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM evidencia");
+    const result = await turso.execute("SELECT e.*, te.nombre as nombre_tipo_evidencia FROM evidencia e, tipo_evidencia te WHERE e.tipo_evidencia = te.id");
 
     return result.rows;
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM evidencia WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT e.*, te.nombre as nombre_tipo_evidencia FROM evidencia e, tipo_evidencia te WHERE e.tipo_evidencia = te.id AND e.id = ?", [id]);
 
     return result.rows[0];
   }
 
   static async getBySiniestro(siniestro_id) {
-    const result = await turso.execute("SELECT * FROM evidencia WHERE siniestro_id = ?", [siniestro_id]);
+    const result = await turso.execute("SELECT e.*, te.nombre as nombre_tipo_evidencia FROM evidencia e, tipo_evidencia te WHERE e.tipo_evidencia = te.id AND e.siniestro_id = ?", [siniestro_id]);
 
     return result.rows;
   }
