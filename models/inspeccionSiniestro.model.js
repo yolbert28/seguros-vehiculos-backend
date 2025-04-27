@@ -2,7 +2,7 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class InspeccionSiniestroModel {
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM inspeccion_siniestro");
+    const result = await turso.execute("SELECT i.*, e.nombre as inspector FROM inspeccion_siniestro i, empleado e WHERE i.inspector_doc = e.documento");
 
     return result.rows;
   }
@@ -14,13 +14,13 @@ export default class InspeccionSiniestroModel {
   }
 
   static async getBySiniestro(siniestro_id) {
-    const result = await turso.execute("SELECT * FROM inspeccion_siniestro WHERE siniestro_id = ?", [siniestro_id]);
+    const result = await turso.execute("SELECT i.*, e.nombre as inspector FROM inspeccion_siniestro i, empleado e WHERE i.inspector_doc = e.documento AND siniestro_id = ?", [siniestro_id]);
 
     return result.rows;
   }
 
   static async getByInspector(doc) {
-    const result = await turso.execute("SELECT * FROM inspeccion_siniestro WHERE inspector_doc = ?", [doc]);
+    const result = await turso.execute("SELECT i.*, e.nombre as inspector FROM inspeccion_siniestro i, empleado e WHERE i.inspector_doc = e.documento AND inspector_doc = ?", [doc]);
 
     return result.rows;
   }

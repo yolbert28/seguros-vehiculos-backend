@@ -8,7 +8,7 @@ export default class VehiculoModel {
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT v.*, r.nombre as riesgo FROM vehiculo v , riesgo r WHERE v.riesgo_id = r.id AND v.matricula = ?", [id]);
+    const result = await turso.execute("SELECT v.*, r.nombre as riesgo, m.nombre as modelo, ma.nombre as marca FROM vehiculo v , riesgo r, modelo m, marca ma WHERE m.id = v.modelo_id AND ma.id = m.marca_id AND v.riesgo_id = r.id AND v.matricula = ?", [id]);
 
     return result.rows[0];
   }

@@ -29,6 +29,9 @@ export default class SiniestroController {
     const indemnizacion = await this.indemnizacionModel.getBySiniestro(id);
 
     if (siniestro) {
+      const vehiculo = await this.vehiculoModel.getById(siniestro.vehiculo_mat);
+
+      siniestro.vehiculo = vehiculo;
       siniestro.evidencias = evidencias;
       siniestro.inspeccionSiniestro = inspeccionSiniestro;
       siniestro.indemnizacion = indemnizacion;
