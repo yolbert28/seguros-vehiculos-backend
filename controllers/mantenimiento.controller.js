@@ -18,6 +18,12 @@ export default class MantenimientoController {
 
     const mantenimiento = await this.mantenimientoModel.getById(id);
 
+    if (mantenimiento) {
+      const taller = await this.tallerModel.getById(mantenimiento.taller_rif);
+
+      mantenimiento.taller = taller;
+    }
+
     res.json(mantenimiento);
   }
 
