@@ -24,9 +24,10 @@ export default class PolizaController {
 
     const resultPrima = await this.primaModel.getByPoliza(id);
 
-    const empleado = await this.empleadoModel.getById(result.asesor_doc);
 
-    if (result){
+
+    if (result) {
+      const empleado = await this.empleadoModel.getById(result.asesor_doc);
       result.vehiculos = resultVehiculo;
       result.primas = resultPrima;
       result.asesor = empleado;

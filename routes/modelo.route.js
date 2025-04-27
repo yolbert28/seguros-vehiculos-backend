@@ -8,6 +8,7 @@ export default function createModeloRouter({ modeloModel, marcaModel, vehiculoMo
 
   router.get('/', modeloController.getAll);
   router.get('/:id', modeloController.getById);
+  router.get('/brand/:id', modeloController.getByMarca);
   router.post('/', modeloController.create);
   router.put('/:id', modeloController.update);
   router.delete('/:id', modeloController.delete);

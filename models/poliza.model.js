@@ -2,19 +2,19 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class PolizaModel {
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM poliza");
+    const result = await turso.execute("SELECT p.*, tp.nombre as nombre_tipo_pago, e.nombre as asesor FROM poliza p, tipo_pago tp, empleado e WHERE p.tipo_pago = tp.id AND e.documento = p.asesor_doc ");
 
     return result.rows;
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM poliza WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT p.*, tp.nombre as nombre_tipo_pago, e.nombre as asesor FROM poliza p, tipo_pago tp, empleado e WHERE p.tipo_pago = tp.id AND e.documento = p.asesor_doc AND p.id = ?", [id]);
 
     return result.rows[0];
   }
 
   static async getByCliente(documento) {
-    const result = await turso.execute("SELECT * FROM poliza WHERE cliente_doc = ?", [documento]);
+    const result = await turso.execute("SELECT p.*, tp.nombre as nombre_tipo_pago, e.nombre as asesor FROM poliza p, tipo_pago tp, empleado e WHERE p.tipo_pago = tp.id AND e.documento = p.asesor_doc AND cliente_doc = ?", [documento]);
 
     return result.rows;
   }
@@ -38,7 +38,7 @@ export default class PolizaModel {
   }
 
   static async getByAsesor(documento) {
-    const result = await turso.execute("SELECT * FROM poliza WHERE asesor_doc = ?", [documento]);
+    const result = await turso.execute("SELECT p.*, tp.nombre as nombre_tipo_pago, e.nombre as asesor FROM poliza p, tipo_pago tp, empleado e WHERE p.tipo_pago = tp.id AND e.documento = p.asesor_doc AND asesor_doc = ?", [documento]);
 
     return result.rows;
   }

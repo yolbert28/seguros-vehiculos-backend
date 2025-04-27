@@ -20,10 +20,16 @@ export default class VehiculoController {
 
     const vehiculo = await this.vehiculoModel.getById(id);
 
-    const modelo = await this.modeloModel.getById(vehiculo.modelo_id);
-
     if (vehiculo) {
+      const modelo = await this.modeloModel.getById(vehiculo.modelo_id);
+      const poliza = await this.polizaModel.getById(vehiculo.poliza_id);
+      const mantenimientos = await this.mantenimientoModel.getByVehiculo(id);
+      const siniestros = await this.siniestroModel.getByVehiculo(id);
+
       vehiculo.modelo = modelo;
+      vehiculo.poliza = poliza;
+      vehiculo.mantenimientos = mantenimientos;
+      vehiculo.siniestros = siniestros;
     }
 
     res.json(vehiculo);

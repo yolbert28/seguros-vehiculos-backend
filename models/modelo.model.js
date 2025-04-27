@@ -3,19 +3,19 @@ import { turso } from "./connection/dbConnection.js";
 export default class ModeloModel {
 
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM modelo");
+    const result = await turso.execute("SELECT m.*,ma.nombre as marca FROM modelo m, marca ma WHERE m.marca_id = ma.id");
 
     return result.rows;
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM modelo WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT m.*,ma.nombre as marca FROM modelo m, marca ma WHERE m.id = ? AND m.marca_id = ma.id", [id]);
 
     return result.rows[0];
   }
 
   static async getByMarca(id) {
-    const result = await turso.execute("SELECT * FROM modelo WHERE marca_id = ?", [id]);
+    const result = await turso.execute("SELECT m.*,ma.nombre as marca FROM modelo m, marca ma WHERE ma.id = ? AND m.marca_id = ma.id", [id]);
 
     return result.rows;
   }

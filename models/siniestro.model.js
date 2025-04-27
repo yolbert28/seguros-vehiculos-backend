@@ -2,25 +2,25 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class SiniestroModel {
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM siniestro");
+    const result = await turso.execute("SELECT s.*, ts.nombre as tipo_siniestro, e.nombre as nombre_estado FROM siniestro s, tipo_siniestro ts, estado e WHERE s.tipo_siniestro_id = ts.id AND s.estado = e.id");
 
     return result.rows;
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM siniestro WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT s.*, ts.nombre as tipo_siniestro, e.nombre as nombre_estado FROM siniestro s, tipo_siniestro ts, estado e WHERE s.tipo_siniestro_id = ts.id AND s.estado = e.id AND id = ?", [id]);
 
     return result.rows[0];
   }
 
   static async getByReporteSiniestro(id) {
-    const result = await turso.execute("SELECT * FROM siniestro WHERE reporte_siniestro_id = ?", [id]);
+    const result = await turso.execute("SELECT s.*, ts.nombre as tipo_siniestro, e.nombre as nombre_estado FROM siniestro s, tipo_siniestro ts, estado e WHERE s.tipo_siniestro_id = ts.id AND s.estado = e.id AND reporte_siniestro_id = ?", [id]);
 
     return result.rows[0];
   }
 
   static async getByVehiculo(matricula) {
-    const result = await turso.execute("SELECT * FROM siniestro WHERE vehiculo_mat = ?", [matricula]);
+    const result = await turso.execute("SELECT s.*, ts.nombre as tipo_siniestro, e.nombre as nombre_estado FROM siniestro s, tipo_siniestro ts, estado e WHERE s.tipo_siniestro_id = ts.id AND s.estado = e.id AND vehiculo_mat = ?", [matricula]);
 
     return result.rows;
   }

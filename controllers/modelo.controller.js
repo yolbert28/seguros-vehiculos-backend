@@ -21,6 +21,14 @@ export default class ModeloController {
     res.json(modelo);
   }
 
+  getByMarca = async (req, res) => {
+    const { id } = req.params;
+
+    const modelo = await this.modeloModel.getByMarca(id);
+
+    res.json(modelo);
+  }
+
   create = async (req, res) => {
     const newModelo = validateModelo(req.body);
 
