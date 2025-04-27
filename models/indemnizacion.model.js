@@ -17,7 +17,7 @@ export default class IndemnizacionModel {
   static async getBySiniestro(siniestroId) {
     const result = await turso.execute("SELECT * FROM indemnizacion WHERE siniestro_id = ?", [siniestroId]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async create(indemnizacion) {

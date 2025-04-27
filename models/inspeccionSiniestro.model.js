@@ -16,7 +16,7 @@ export default class InspeccionSiniestroModel {
   static async getBySiniestro(siniestro_id) {
     const result = await turso.execute("SELECT i.*, e.nombre as inspector FROM inspeccion_siniestro i, empleado e WHERE i.inspector_doc = e.documento AND siniestro_id = ?", [siniestro_id]);
 
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByInspector(doc) {
