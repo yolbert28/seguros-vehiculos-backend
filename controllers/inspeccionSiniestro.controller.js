@@ -20,7 +20,10 @@ export default class InspeccionSiniestroController {
 
     if (inspeccionSiniestro) {
       const empleado = await this.empleadoModel.getById(inspeccionSiniestro.inspector_doc);
+      const repuestosSiniestro = await this.repuestoSiniestroModel.getByInspeccion(inspeccionSiniestro.id);
+
       inspeccionSiniestro.inspector = empleado;
+      inspeccionSiniestro.repuestos = repuestosSiniestro;
     }
 
     res.json(inspeccionSiniestro);
