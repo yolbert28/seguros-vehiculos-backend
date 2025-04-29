@@ -2,7 +2,8 @@ import cors from 'cors'
 
 const ACCEPTED_ORIGINS = [
   '*',
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'https://seguros-vehiculos-web.vercel.app',
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({
