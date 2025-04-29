@@ -43,6 +43,15 @@ export default class VehiculoController {
     res.json(vehiculos);
   }
 
+  getByCliente = async (req, res) => {
+    const { id } = req.params;
+
+    const vehiculos = await this.vehiculoModel.getByCliente(id);
+
+    res.json(vehiculos);
+  }
+
+
   create = async (req, res) => {
     const newVehiculo = validateVehiculo(req.body);
 

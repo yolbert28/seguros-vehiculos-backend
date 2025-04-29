@@ -25,6 +25,12 @@ export default class VehiculoModel {
     return result.rows;
   }
 
+  static async getByCliente(cliente_doc) {
+    const result = await turso.execute("SELECT v.*, r.nombre as riesgo, m.nombre as modelo, ma.nombre as marca FROM vehiculo v , riesgo r, modelo m, marca ma, poliza p WHERE v.riesgo_id = r.id AND m.id = v.modelo_id AND m.marca_id = ma.id AND p.id = v.poliza_id AND p.cliente_doc = ?", [cliente_doc]);
+
+    return result.rows;
+  }
+
   static async create(vehiculo) {
     const { matricula, poliza_id, modelo_id, riesgo_id, capacidad_carga, anno, valoracion } = vehiculo;
 

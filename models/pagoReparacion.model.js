@@ -2,19 +2,19 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class PagoReparacionModel {
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM pago_reparacion");
+    const result = await turso.execute("SELECT pr.id, pr.reparacion_id, p.nombre as pagante, pr.monto, pr.fecha FROM pago_reparacion pr, pagante p  WHERE pr.pagante = p.id");
 
     return result.rows;
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM pago_reparacion WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT pr.id, pr.reparacion_id, p.nombre as pagante, pr.monto, pr.fecha FROM pago_reparacion pr, pagante p  WHERE pr.pagante = p.id AND pr.id = ?", [id]);
 
     return result.rows[0];
   }
 
   static async getByReparacion(reparacionId) {
-    const result = await turso.execute("SELECT * FROM pago_reparacion WHERE reparacion_id = ?", [reparacionId]);
+    const result = await turso.execute("SELECT pr.id, pr.reparacion_id, p.nombre as pagante, pr.monto, pr.fecha FROM pago_reparacion pr, pagante p  WHERE pr.pagante = p.id AND reparacion_id = ?", [reparacionId]);
 
     return result.rows;
   }

@@ -8,7 +8,8 @@ export default function createVehiculoRouter({ vehiculoModel, polizaModel, sinie
 
   route.get("/", vehiculoController.getAll);
   route.get("/:id", vehiculoController.getById);
-  route.get("/poliza/:id", vehiculoController.getByPoliza);
+  route.get("/policy/:id", vehiculoController.getByPoliza);
+  route.get("/client/:id", vehiculoController.getByCliente);
   route.post("/", vehiculoController.create);
   route.put("/:id", vehiculoController.update);
   route.delete("/:id", vehiculoController.delete);
