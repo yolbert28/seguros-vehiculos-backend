@@ -9,6 +9,7 @@ export default function createClienteRouter({ clienteModel, polizaModel, reporte
   router.get("/", clienteController.getAll);
   router.get("/:documento", clienteController.getById);
   router.get("/email/:correo", clienteController.getByEmail);
+  router.post("/login", clienteController.login);
   router.post("/", clienteController.create);
   router.put("/:documento", clienteController.update);
   router.delete("/:documento", clienteController.delete);

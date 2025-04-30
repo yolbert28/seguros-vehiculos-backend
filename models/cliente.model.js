@@ -21,7 +21,7 @@ export default class ClienteModel {
   }
 
   static async getContrasena(documento) {
-    const result = await turso.execute("SELECT contrasena FROM cliente WHERE documento = ?", [documento]);
+    const result = await turso.execute("SELECT * FROM cliente WHERE documento = ?", [documento]);
 
     return result.rows[0];
   }
