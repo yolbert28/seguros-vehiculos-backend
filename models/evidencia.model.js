@@ -8,7 +8,7 @@ export default class EvidenciaModel {
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT e.*, te.nombre as nombre_tipo_evidencia FROM evidencia e, tipo_evidencia te WHERE e.tipo_evidencia = te.id AND e.id = ?", [id]);
+    const result = await turso.execute("SELECT e.*, te.nombre as nombre_tipo_evidencia, p.cliente_doc FROM evidencia e, tipo_evidencia te, siniestro s, vehiculo v, poliza p WHERE s.id = e.siniestro_id AND v.matricula = s.vehiculo_mat AND v.poliza_id = p.id AND e.tipo_evidencia = te.id AND e.id = ?", [id]);
 
     return result.rows[0];
   }
