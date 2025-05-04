@@ -59,30 +59,32 @@ export default class VehiculoModel {
       );
 
       if (checkResult.rows.length === 0) {
-        return false;
+        return { success: false, message: "El vehículo no existe" };
       }
 
       // Luego realizar la actualización
       await turso.execute(
-        "UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ? WHERE matricula = ?,"
+        "UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? WHERE matricula = ?",
         [modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha, matricula]
       );
 
-      return true;
+      return { success: true };
     } catch (error) {
       console.log(error);
-      return false;
+      return { success: false, message: error.message };
     }
-}
 }
 
 static async delete(matricula) {
-    try {
-      await turso.execute("DELETE FROM vehiculo WHERE matricula = ?", [ matricula ]);
+  try {
+    await turso.execute("DELETE FROM vehiculo WHERE matricula = ?", [ matricula ]);
 
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
+}
+
+
