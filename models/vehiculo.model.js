@@ -64,7 +64,7 @@ export default class VehiculoModel {
 
       // Luego realizar la actualización
       await turso.execute(
-        "UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? WHERE matricula = ?", 
+        "UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ? WHERE matricula = ?,"
         [modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha, matricula]
       );
 
@@ -76,7 +76,7 @@ export default class VehiculoModel {
 }
 }
 
-  static async delete(matricula) {
+static async delete(matricula) {
     try {
       await turso.execute("DELETE FROM vehiculo WHERE matricula = ?", [ matricula ]);
 
@@ -85,5 +85,4 @@ export default class VehiculoModel {
       console.log(error);
       return false;
     }
-  }
 }
