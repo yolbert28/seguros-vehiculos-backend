@@ -54,7 +54,7 @@ export default class VehiculoModel {
     const fecha = new Date().toISOString().slice(0, 10);
 
     try {
-      await turso.execute("UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? ", [ modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha]);
+      await turso.execute("UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? WHERE matricula = ?", [ modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha, matricula]);
 
       return true;
     } catch (error) {
