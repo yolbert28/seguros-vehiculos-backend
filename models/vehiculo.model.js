@@ -47,21 +47,22 @@ export default class VehiculoModel {
     }
   }
 
-  static async update(id, vehiculo) {
+  static async update(matricula, vehiculo) {
     const { modelo_id, riesgo_id, capacidad_carga, anno, valoracion } = vehiculo;
-
-
     const fecha = new Date().toISOString().slice(0, 10);
 
     try {
-      await turso.execute("UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? WHERE matricula = ?", [ modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha, matricula]);
+      await turso.execute(
+        "UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? WHERE matricula = ?", 
+        [modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha, matricula]
+      );
 
       return true;
     } catch (error) {
       console.log(error);
       return false;
     }
-  }
+}
 
   static async delete(matricula) {
     try {
