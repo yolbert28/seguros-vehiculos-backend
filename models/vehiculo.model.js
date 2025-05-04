@@ -50,30 +50,30 @@ export default class VehiculoModel {
   static async update(matricula, vehiculo) {
     const { modelo_id, riesgo_id, capacidad_carga, anno, valoracion } = vehiculo;
     const fecha = new Date().toISOString().slice(0, 10);
-
+  
     try {
       // Primero verificar si el vehículo existe
       const checkResult = await turso.execute(
         "SELECT matricula FROM vehiculo WHERE matricula = ?",
         [matricula]
       );
-
+  
       if (checkResult.rows.length === 0) {
-        return { success: false, message: "El vehículo no existe" };
+        return false;
       }
-
+  
       // Luego realizar la actualización
       await turso.execute(
         "UPDATE vehiculo SET modelo_id = ?, riesgo_id = ?, capacidad_carga = ?, anno = ?, valoracion = ?, ultima_actualizacion = ? WHERE matricula = ?",
         [modelo_id, riesgo_id, capacidad_carga, anno, valoracion, fecha, matricula]
       );
-
-      return { success: true };
+  
+      return true;
     } catch (error) {
       console.log(error);
-      return { success: false, message: error.message };
+      return false;
     }
-}
+  }
 
 static async delete(matricula) {
   try {

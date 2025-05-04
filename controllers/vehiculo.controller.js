@@ -83,23 +83,23 @@ export default class VehiculoController {
   update = async (req, res) => {
     const { id } = req.params;
     const vehiculo = validatePartialVehiculo(req.body);
-
+  
     if (!vehiculo.success) {
       return res.status(400).json({ error: vehiculo.error });
     }
-
+  
     const vehiculoExist = await this.vehiculoModel.getById(id);
-
-    if (vehiculoExist.length === 0) {
+  
+    if (!vehiculoExist) {  // Cambiado de vehiculoExist.length === 0
       return res.status(400).json({ error: "No existe el vehiculo" });
     }
-
+  
     const result = await this.vehiculoModel.update(id, vehiculo.data);
-
+  
     if (!result) {
       return res.status(400).json({ error: "Error updating vehiculo" });
     }
-
+  
     res.status(200).json({ success: true });
   }
 
