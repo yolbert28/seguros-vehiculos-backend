@@ -157,7 +157,7 @@ export default class ClienteController {
 
     if (!isMatch) {
       return res
-        .status(401)
+        .status(400)
         .json({ success: false, error: "Credenciales invalidas" });
     }
 
