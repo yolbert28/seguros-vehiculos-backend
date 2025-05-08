@@ -15,7 +15,7 @@ export default class MarcaModel {
   }
 
   static async getByNombre(nombre) {
-    const result = await turso.execute("SELECT * FROM marca WHERE nombre = ?", [nombre]);
+    const result = await turso.execute("SELECT * FROM marca WHERE nombre = ? COLLATE NOCASE", [nombre]);
 
     return result.rows;
   }
