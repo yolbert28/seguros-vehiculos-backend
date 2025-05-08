@@ -64,7 +64,7 @@ export default class MarcaController {
     const result = await this.marcaModel.update({ id, input: newMarca.data });
 
     if (!result) {
-      return res.status(400).json({ error: "Error al actualizar marca" });
+      return res.status(500).json({ error: "Error al actualizar marca" });
     }
 
     res.status(200).json({ success: result });
