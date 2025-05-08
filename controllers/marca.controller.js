@@ -41,7 +41,7 @@ export default class MarcaController {
     const result = await this.marcaModel.create({ input: newMarca.data });
 
     if (!result.success) {
-      return res.status(400).json({ error: "Error al crear marca" });
+      return res.status(500).json({ error: "Error al crear marca" });
     }
 
     res.status(201).json(result.data);
