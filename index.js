@@ -52,6 +52,7 @@ import polizaServicioModel from './models/polizaServicio.model.js';
 import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
 import Mailer from './utils/mailer.js';
 import { corsMiddleware } from './middlewares/cors.middleware.js';
+import cors from 'cors'
 
 const app = express();
 
@@ -59,7 +60,12 @@ app.disable('x-powered-by');
 
 app.use(json());
 
-app.use(corsMiddleware());
+app.use(cors({
+    origin: '*', // Permite cualquier origen
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
+    credentials: true // Si necesitas cookies/tokens de autenticación
+  }));
 
 const server = createServer(app)
 const io = new Server(server, {
@@ -67,8 +73,11 @@ const io = new Server(server, {
         maxDisconnectionDuration: 10000
     },
     cors: {
-        origin: ["http://localhost:5173","http://localhost:5174","https://seguros-vehiculos-web.vercel.app", "http://localhost:5500", "*"]
-    }
+        origin: '*', // Permite cualquier origen
+        methods: ['GET', 'POST'], // Métodos permitidos para WebSocket
+        allowedHeaders: ['Authorization'], // Headers necesarios para autenticación
+        credentials: true // Si usas JWT/cookies
+      }
 })
 
 // Envia los correos de mantenimiento y poliza todos los dias a las 12:00 am
@@ -81,7 +90,7 @@ cron.schedule('00 00 * * *', () => {
     timezone: "America/Caracas"
 });
 
-io.use(verifyTokenSocket);
+// io.use(verifyTokenSocket);
 
 io.on('connection', async (socket) => {
     console.log('a user connected');
