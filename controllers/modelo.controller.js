@@ -51,7 +51,7 @@ export default class ModeloController {
     const result = await this.modeloModel.create({ input: newModelo.data });
 
     if (!result.success) {
-      return res.status(400).json({ error: "Error creating modelo" });
+      return res.status(500).json({ error: "Error creating modelo" });
     }
 
     res.status(200).json(result.data);

@@ -21,19 +21,19 @@ export default class ModeloModel {
   }
 
   static async getByNombreAndNotId(nombre, id) {
-    const result = await turso.execute("SELECT * FROM modelo WHERE nombre = ? AND id != ?", [nombre, id]);
+    const result = await turso.execute("SELECT * FROM modelo WHERE nombre = ? AND id != ? COLLATE NOCASE", [nombre, id]);
 
     return result.rows;
   }
 
   static async getByNombreAndNotMarcaId(nombre, marcaId) {
-    const result = await turso.execute("SELECT * FROM modelo WHERE nombre = ? AND marca_id = ?", [nombre, marcaId]);
+    const result = await turso.execute("SELECT * FROM modelo WHERE nombre = ? AND marca_id = ? COLLATE NOCASE", [nombre, marcaId]);
 
     return result.rows;
   }
 
   static async getByNombre(nombre) {
-    const result = await turso.execute("SELECT * FROM modelo WHERE nombre = ?", [nombre]);
+    const result = await turso.execute("SELECT * FROM modelo WHERE nombre = ? COLLATE NOCASE", [nombre]);
 
     return result.rows;
   }
