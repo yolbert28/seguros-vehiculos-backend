@@ -49,10 +49,12 @@ import inspeccionSiniestroModel from './models/inspeccionSiniestro.model.js';
 import repuestoReparacionModel from './models/repuestoReparacion.model.js';
 import coberturaServicioModel from './models/coberturaServicio.model.js';
 import polizaServicioModel from './models/polizaServicio.model.js';
+import riesgoModel from './models/riesgo.model.js';
 import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
 import Mailer from './utils/mailer.js';
 import { corsMiddleware } from './middlewares/cors.middleware.js';
 import cors from 'cors'
+import createRiesgoRouter from './routes/riesgo.route.js';
 
 const app = express();
 
@@ -129,6 +131,7 @@ app.use("/indemnity", createIndemnizacionRouter({ indemnizacionModel, siniestroM
 app.use("/indemnityInspection", createInspeccionIndemnizacionRouter({ inspeccionIndemnizacionModel, indemnizacionModel, empleadoModel }))
 app.use("/accidentInspection", createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel }))
 app.use("/repairReplacement", createRepuestoReparacionRouter({ repuestoReparacionModel, reparacionModel }))
+app.use("/risk", createRiesgoRouter({ riesgoModel }))
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
