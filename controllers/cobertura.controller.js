@@ -1,9 +1,9 @@
 import { validateCobertura, validatePartialCobertura } from "../schemas/cobertura.schema.js";
 
 export default class CoberturaController {
-  constructor({ coberturaModel, coberturaServicioModel }) {
+  constructor({ coberturaModel, coberturaPolizaModel }) {
     this.coberturaModel = coberturaModel;
-    this.coberturaServicioModel = coberturaServicioModel;
+    this.coberturaPolizaModel = coberturaPolizaModel;
   }
 
   getAll = async (req, res) => {
@@ -16,6 +16,15 @@ export default class CoberturaController {
     const { id } = req.params;
 
     const result = await this.coberturaModel.getById(id);
+
+    res.json(result);
+  }
+
+
+  getCoberturasByPoliza = async (req, res) => {
+    const { polizaId } = req.params;
+
+    const result = await this.coberturaModel.getCoberturasByPoliza(polizaId);
 
     res.json(result);
   }
@@ -80,10 +89,10 @@ export default class CoberturaController {
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const hasCoberturaServicio = await this.coberturaServicioModel.getByCobertura(id)
+    const hasCoberturaPoliza = await this.coberturaPolizaModel.getByCobertura(id)
 
-    if (hasCoberturaServicio.length > 0) {
-      return res.status(400).json({ success: false, error: "No se puede eliminar porque se encuentra siendo utilizado por algunos servicios" })
+    if (hasCoberturaPoliza.length > 0) {
+      return res.status(400).json({ success: false, error: "No se puede eliminar porque se encuentra siendo utilizado por algunas coberturas" })
     }
 
     const result = await this.coberturaModel.delete(id);

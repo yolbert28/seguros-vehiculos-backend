@@ -1,10 +1,10 @@
 import { validatePoliza } from "../schemas/poliza.schema.js";
 
 export default class PolizaController {
-  constructor({ polizaModel, empleadoModel, polizaServicioModel, vehiculoModel, primaModel }) {
+  constructor({ polizaModel, empleadoModel, coberturaPolizaModel, vehiculoModel, primaModel }) {
     this.polizaModel = polizaModel;
     this.empleadoModel = empleadoModel;
-    this.polizaServicioModel = polizaServicioModel;
+    this.coberturaPolizaModel = coberturaPolizaModel;
     this.vehiculoModel = vehiculoModel;
     this.primaModel = primaModel;
   }
@@ -23,8 +23,6 @@ export default class PolizaController {
     const resultVehiculo = await this.vehiculoModel.getByPoliza(id);
 
     const resultPrima = await this.primaModel.getByPoliza(id);
-
-
 
     if (result) {
       const empleado = await this.empleadoModel.getById(result.asesor_doc);
@@ -97,36 +95,36 @@ export default class PolizaController {
     return res.status(200).json({ success: true });
   }
 
-  addServicio = async (req, res) => {
-    const { id, servicioId } = req.params
+  addCobertura = async (req, res) => {
+    const { id, coberturaId } = req.params
 
-    const polizaServicioExist = await this.polizaServicioModel.getById(id, servicioId);
+    const coberturaPolizaExist = await this.coberturaPolizaModel.getById(coberturaId, id);
 
-    if (polizaServicioExist.length > 0) {
-      return res.status(400).json({ success: false, error: "La poliza ya contiene este servicio" })
+    if (coberturaPolizaExist) {
+      return res.status(400).json({ success: false, error: "La poliza ya contiene esta cobertura" })
     }
 
-    const result = await this.polizaServicioModel.create({ poliza_id: id, servicio_id: servicioId })
+    const result = await this.coberturaPolizaModel.create({ poliza_id: id, cobertura_id: coberturaId })
 
     if (!result)
-      return res.status(500).json({ success: false, error: "Error al agregar el servicio a la poliza" })
+      return res.status(500).json({ success: false, error: "Error al agregar la cobertura a la poliza" })
 
     res.status(200).json({ success: true })
   }
 
-  removeServicio = async (req, res) => {
-    const { id, servicioId } = req.params
+  removeCobertura = async (req, res) => {
+    const { id, coberturaId } = req.params
 
-    const polizaServicioExist = await this.polizaServicioModel.getById(id, servicioId);
+    const coberturaPolizaExist = await this.coberturaPolizaModel.getById(coberturaId, id);
 
-    if (!polizaServicioExist) {
-      return res.status(400).json({ success: false, error: "El servicio no se encuentra dentro de la poliza" })
+    if (!coberturaPolizaExist) {
+      return res.status(400).json({ success: false, error: "La cobertura no se encuentra dentro de la poliza" })
     }
 
-    const result = await this.polizaServicioModel.delete({ poliza_id: id, servicio_id: servicioId })
+    const result = await this.coberturaPolizaModel.delete({ poliza_id: id, cobertura_id: coberturaId })
 
     if (!result)
-      return res.status(500).json({ success: false, error: "Error al remover el servicio de la poliza" })
+      return res.status(500).json({ success: false, error: "Error al remover la cobertura de la poliza" })
 
     res.status(200).json({ success: true })
   }
@@ -144,10 +142,10 @@ export default class PolizaController {
     if (primaExist.length > 0)
       return res.status(400).json({ success: false, error: "La poliza tiene primas registradas" })
 
-    const hasServicios = await this.polizaServicioModel.getByPoliza(id);
+    const hasCobertura = await this.coberturaPolizaModel.getByPoliza(id);
 
-    if (hasServicios.length > 0) {
-      return res.status(400).json({ success: false, error: "La poliza tiene servicios asignados" })
+    if (hasCobertura.length > 0) {
+      return res.status(400).json({ success: false, error: "La poliza tiene coberturas asignadas" })
     }
 
     const result = await this.polizaModel.delete(id);
