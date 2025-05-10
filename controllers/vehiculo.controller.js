@@ -32,7 +32,7 @@ export default class VehiculoController {
       vehiculo.siniestros = siniestros;
     }
 
-    res.json(vehiculo);
+    res.json({ success: true, data: vehiculo});
   }
 
   getByPoliza = async (req, res) => {
