@@ -33,7 +33,7 @@ export default class PolizaController {
       result.asesor = empleado;
     }
 
-    return res.json(result);
+    return res.json({ success: true, data: result});
   }
 
   getByCliente = async (req, res) => {
