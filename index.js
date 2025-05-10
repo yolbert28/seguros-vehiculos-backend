@@ -114,7 +114,7 @@ app.use("/coverage", createCoberturaRouter({ coberturaModel, coberturaPolizaMode
 app.use("/brand", createMarcaRouter({ marcaModel, modeloModel }))
 app.use("/model", createModeloRouter({ modeloModel, marcaModel, vehiculoModel }))
 app.use("/employee", createEmpleadoRouter({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel }))
-app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel, coberturaPolizaModel, vehiculoModel, primaModel }))
+app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel, coberturaPolizaModel, coberturaModel, vehiculoModel, primaModel }))
 app.use("/premium", createPrimaRouter({ primaModel, polizaModel }))
 app.use("/accidentRepair", createRepuestoSiniestroRouter({ repuestoSiniestroModel, inspeccionSiniestroModel }))
 app.use("/workshop", createTallerRouter({ tallerModel, reparacionModel, mantenimientoModel }))

@@ -1,10 +1,11 @@
 import { validatePoliza } from "../schemas/poliza.schema.js";
 
 export default class PolizaController {
-  constructor({ polizaModel, empleadoModel, coberturaPolizaModel, vehiculoModel, primaModel }) {
+  constructor({ polizaModel, empleadoModel, coberturaPolizaModel, coberturaModel, vehiculoModel, primaModel }) {
     this.polizaModel = polizaModel;
     this.empleadoModel = empleadoModel;
     this.coberturaPolizaModel = coberturaPolizaModel;
+    this.coberturaModel = coberturaModel;
     this.vehiculoModel = vehiculoModel;
     this.primaModel = primaModel;
   }
@@ -20,18 +21,19 @@ export default class PolizaController {
 
     const result = await this.polizaModel.getById(id);
 
-    const resultVehiculo = await this.vehiculoModel.getByPoliza(id);
-
-    const resultPrima = await this.primaModel.getByPoliza(id);
 
     if (result) {
+      const resultVehiculo = await this.vehiculoModel.getByPoliza(id);
+      const resultPrima = await this.primaModel.getByPoliza(id);
+      const coberturas = await this.coberturaModel.getCoberturasByPoliza(id);
       const empleado = await this.empleadoModel.getById(result.asesor_doc);
       result.vehiculos = resultVehiculo;
       result.primas = resultPrima;
       result.asesor = empleado;
+      result.coberturas = coberturas;
     }
 
-    return res.json({ success: true, data: result});
+    return res.json({ success: true, data: result });
   }
 
   getByCliente = async (req, res) => {

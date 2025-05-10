@@ -1,10 +1,10 @@
 import { Router } from "express";
 import PolizaController from "../controllers/poliza.controller.js";
 
-export default function createPolizaRouter({ polizaModel, empleadoModel, coberturaPolizaModel, vehiculoModel, primaModel }) {
+export default function createPolizaRouter({ polizaModel, empleadoModel, coberturaPolizaModel, coberturaModel, vehiculoModel, primaModel }) {
   const route = Router();
 
-  const polizaController = new PolizaController({ polizaModel, empleadoModel, coberturaPolizaModel, vehiculoModel, primaModel });
+  const polizaController = new PolizaController({ polizaModel, empleadoModel, coberturaPolizaModel, coberturaModel, vehiculoModel, primaModel });
 
   route.get("/", polizaController.getAll);
   route.get("/:id", polizaController.getById);
