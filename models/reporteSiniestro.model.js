@@ -12,7 +12,7 @@ export default class ReporteSiniestroModel {
   }
 
   static async getByNotAtendido() {
-    const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE atendido = FALSE ORDER BY id DESC");
+    const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE atendido = 2 ORDER BY id DESC");
     return result.rows;
   }
 
