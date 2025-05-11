@@ -72,20 +72,21 @@ export default class EmpleadoModel {
   }
 
   static async update(documento, input) {
-    const { nombre, correo, telefono, tipo_empleado} = input;
+  // Aceptar ambos nombres de campo
+  const tipo_empleado = input.tipo_empleado_id || input.tipo_empleado;
+  const { nombre, correo, telefono } = input;
 
-    try {
-      await turso.execute(
-        "UPDATE empleado SET nombre = ?, correo = ?, telefono = ?, tipo_empleado_id = ? WHERE documento = ?",
-        [nombre, correo, telefono, tipo_empleado, documento]
-      );
-
-      return true;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
+  try {
+    await turso.execute(
+      "UPDATE empleado SET nombre = ?, correo = ?, telefono = ?, tipo_empleado_id = ? WHERE documento = ?",
+      [nombre, correo, telefono, tipo_empleado, documento]
+    );
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
+}
 
   static async delete(documento) {
     try {
