@@ -103,19 +103,15 @@ export default class SiniestroController {
     const { id } = req.params;
 
     const evidenciaExist = await this.evidenciaModel.getBySiniestro(id);
-
-    if(evidenciaExist.length > 0) {
+    if (Array.isArray(evidenciaExist) && evidenciaExist.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene evidencias asociadas" });
     }
     const indemnizacionExist = await this.indemnizacionModel.getBySiniestro(id);
-
-    if(indemnizacionExist.length > 0) {
+    if (Array.isArray(indemnizacionExist) && indemnizacionExist.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene indemnizaciones asociadas" });
     }
-
     const inspeccionSiniestroExist = await this.inspeccionSiniestroModel.getBySiniestro(id);
-
-    if(inspeccionSiniestroExist.length > 0) {
+    if (Array.isArray(inspeccionSiniestroExist) && inspeccionSiniestroExist.length > 0) {
       return res.status(400).json({ success: false, error: "No se puede eliminar el siniestro porque tiene inspecciones asociadas" });
     }
 
