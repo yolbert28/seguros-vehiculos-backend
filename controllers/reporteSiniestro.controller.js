@@ -18,7 +18,10 @@ export default class ReporteSiniestroController {
 
     const reporte = await this.reporteSiniestroModel.getById(id);
 
-    res.json(reporte);
+    if(reporte)
+      res.json(reporte);
+    else
+      res.json({})
   }
 
   getByCliente = async (req, res) => {
