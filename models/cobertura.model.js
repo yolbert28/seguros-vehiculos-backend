@@ -14,6 +14,12 @@ export default class CoberturaModel {
     return result.rows[0];
   }
 
+  static async getCoberturasByPoliza(polizaId) {
+    const result = await turso.execute("SELECT c.* FROM cobertura c, cobertura_poliza cp WHERE c.id = cp.cobertura_id AND cp.poliza_id = ?", [polizaId]);
+
+    return result.rows;
+  }
+
   static async getByNombreAndNotId(nombre, id) {
     const result = await turso.execute("SELECT * FROM cobertura WHERE nombre = ? AND id != ?", [nombre, id]);
 
@@ -27,10 +33,10 @@ export default class CoberturaModel {
   }
 
   static async create({ input }) {
-    const { nombre, descripcion } = input;
+    const { nombre, descripcion, monto } = input;
 
     try {
-      await turso.execute("INSERT INTO cobertura (nombre, descripcion) VALUES (?, ?)", [nombre, descripcion]);
+      await turso.execute("INSERT INTO cobertura (nombre, descripcion, monto) VALUES (?, ?, ?)", [nombre, descripcion, monto]);
     } catch (e) {
       console.log(e);
       return { success: false };
@@ -44,10 +50,10 @@ export default class CoberturaModel {
   }
 
   static async update({ id, input }) {
-    const { nombre, descripcion } = input;
+    const { nombre, descripcion, monto } = input;
 
     try {
-      await turso.execute("UPDATE cobertura SET nombre = ?, descripcion = ? WHERE id = ?", [nombre, descripcion, id]);
+      await turso.execute("UPDATE cobertura SET nombre = ?, descripcion = ?, monto = ? WHERE id = ?", [nombre, descripcion, monto, id]);
     } catch (e) {
       console.log(e);
       return false;

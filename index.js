@@ -6,7 +6,6 @@ import cron from 'node-cron';
 
 import createClienteRouter from './routes/cliente.route.js';
 import createCoberturaRouter from './routes/cobertura.route.js';
-import createServicioRouter from './routes/servicio.route.js';
 import createMarcaRouter from './routes/marca.route.js';
 import createModeloRouter from './routes/modelo.route.js';
 import createEmpleadoRouter from './routes/empleado.route.js';
@@ -28,7 +27,6 @@ import createRepuestoReparacionRouter from './routes/repuestoReparacion.route.js
 
 import clienteModel from './models/cliente.model.js';
 import coberturaModel from './models/cobertura.model.js';
-import servicioModel from './models/servicio.model.js';
 import marcaModel from './models/marca.model.js';
 import modeloModel from './models/modelo.model.js';
 import empleadoModel from './models/empleado.model.js';
@@ -47,12 +45,15 @@ import indemnizacionModel from './models/indemnizacion.model.js';
 import inspeccionIndemnizacionModel from './models/inspeccionIndemnizacion.model.js';
 import inspeccionSiniestroModel from './models/inspeccionSiniestro.model.js';
 import repuestoReparacionModel from './models/repuestoReparacion.model.js';
-import coberturaServicioModel from './models/coberturaServicio.model.js';
-import polizaServicioModel from './models/polizaServicio.model.js';
+import coberturaPolizaModel from './models/coberturaPoliza.model.js';
+import riesgoModel from './models/riesgo.model.js';
+import atendidoModel from './models/atendido.model.js';
 import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
 import Mailer from './utils/mailer.js';
 import { corsMiddleware } from './middlewares/cors.middleware.js';
 import cors from 'cors'
+import createRiesgoRouter from './routes/riesgo.route.js';
+import createAtendidoRouter from './routes/atendido.route.js';
 
 const app = express();
 
@@ -109,12 +110,11 @@ io.on('connection', async (socket) => {
 const PORT = process.env.PORT || 3000;
 
 app.use("/client", createClienteRouter({ clienteModel, polizaModel, reporteSiniestroModel }))
-app.use("/coverage", createCoberturaRouter({ coberturaModel, coberturaServicioModel }))
-app.use("/service", createServicioRouter({ servicioModel, coberturaServicioModel, polizaServicioModel }))
+app.use("/coverage", createCoberturaRouter({ coberturaModel, coberturaPolizaModel }))
 app.use("/brand", createMarcaRouter({ marcaModel, modeloModel }))
 app.use("/model", createModeloRouter({ modeloModel, marcaModel, vehiculoModel }))
 app.use("/employee", createEmpleadoRouter({ empleadoModel, inspeccionSiniestroModel, inspeccionIndemnizacionModel, polizaModel }))
-app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel, polizaServicioModel, vehiculoModel, primaModel }))
+app.use("/policy", createPolizaRouter({ polizaModel, empleadoModel, coberturaPolizaModel, coberturaModel, vehiculoModel, primaModel }))
 app.use("/premium", createPrimaRouter({ primaModel, polizaModel }))
 app.use("/accidentRepair", createRepuestoSiniestroRouter({ repuestoSiniestroModel, inspeccionSiniestroModel }))
 app.use("/workshop", createTallerRouter({ tallerModel, reparacionModel, mantenimientoModel }))
@@ -129,6 +129,8 @@ app.use("/indemnity", createIndemnizacionRouter({ indemnizacionModel, siniestroM
 app.use("/indemnityInspection", createInspeccionIndemnizacionRouter({ inspeccionIndemnizacionModel, indemnizacionModel, empleadoModel }))
 app.use("/accidentInspection", createInspeccionSiniestroRouter({ inspeccionSiniestroModel, siniestroModel, empleadoModel, repuestoSiniestroModel }))
 app.use("/repairReplacement", createRepuestoReparacionRouter({ repuestoReparacionModel, reparacionModel }))
+app.use("/risk", createRiesgoRouter({ riesgoModel }))
+app.use("/attended", createAtendidoRouter({ atendidoModel }))
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

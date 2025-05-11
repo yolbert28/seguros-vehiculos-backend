@@ -5,7 +5,7 @@ const reporteSiniestroSchema = z.object({
   descripcion: z.string().min(5).max(450),
   direccion: z.string().min(5).max(450),
   fecha: z.string().date(),
-  atendido: z.boolean().optional()
+  atendido: z.number().int().positive()
 })
 
 export function validateReporteSiniestro(input){
