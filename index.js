@@ -47,6 +47,12 @@ import inspeccionSiniestroModel from './models/inspeccionSiniestro.model.js';
 import repuestoReparacionModel from './models/repuestoReparacion.model.js';
 import coberturaPolizaModel from './models/coberturaPoliza.model.js';
 import riesgoModel from './models/riesgo.model.js';
+import tipoSiniestroModel from './models/tipoSiniestro.model.js';
+import tipoEmpleadoModel from './models/tipoEmpleado.model.js';
+import tipoEvidenciaModel from './models/tipoEvidencia.model.js';
+import tipoPagoModel from './models/tipoPago.model.js';
+import paganteModel from './models/pagante.model.js';
+import estadoModel from './models/estado.model.js';
 import atendidoModel from './models/atendido.model.js';
 import { verifyTokenSocket } from './middlewares/jwt.middleware.js';
 import Mailer from './utils/mailer.js';
@@ -54,6 +60,12 @@ import { corsMiddleware } from './middlewares/cors.middleware.js';
 import cors from 'cors'
 import createRiesgoRouter from './routes/riesgo.route.js';
 import createAtendidoRouter from './routes/atendido.route.js';
+import createTipoSiniestroRouter from './routes/tipoSiniestro.route.js';
+import createTipoEmpleadoRouter from './routes/tipoEmpleado.route.js';
+import createTipoEvidenciaRouter from './routes/tipoEvidencia.route.js';
+import createTipoPagoRouter from './routes/tipoPago.route.js';
+import createPaganteRouter from './routes/pagante.route.js';
+import createEstadoRouter from './routes/estado.route.js';
 
 const app = express();
 
@@ -131,6 +143,12 @@ app.use("/accidentInspection", createInspeccionSiniestroRouter({ inspeccionSinie
 app.use("/repairReplacement", createRepuestoReparacionRouter({ repuestoReparacionModel, reparacionModel }))
 app.use("/risk", createRiesgoRouter({ riesgoModel }))
 app.use("/attended", createAtendidoRouter({ atendidoModel }))
+app.use("/typeAccident", createTipoSiniestroRouter({tipoSiniestroModel}))
+app.use("/typeEmployee", createTipoEmpleadoRouter({tipoEmpleadoModel}))
+app.use("/typeEvidence", createTipoEvidenciaRouter({tipoEvidenciaModel}))
+app.use("/typePayment", createTipoPagoRouter({tipoPagoModel}))
+app.use("/paying", createPaganteRouter({paganteModel}))
+app.use("/status", createEstadoRouter({estadoModel}))
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
