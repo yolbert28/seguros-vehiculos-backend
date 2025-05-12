@@ -2,7 +2,7 @@ import { turso } from "./connection/dbConnection.js";
 
 export default class ReporteSiniestroModel {
   static async getAll() {
-    const result = await turso.execute("SELECT * FROM reporte_siniestro");
+    const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido");
     return result.rows;
   }
 
