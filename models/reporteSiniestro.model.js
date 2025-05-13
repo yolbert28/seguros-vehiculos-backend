@@ -18,7 +18,7 @@ export default class ReporteSiniestroModel {
 
   static async getByNotAtendidoAndId(id) {
     const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido AND (rs.atendido = 1 OR rs.atendido = 2) AND rs.id = ? ORDER BY id DESC", [id]);
-    return result.rows;
+    return result.rows[0];
   }
 
   static async getByCliente(documento) {
