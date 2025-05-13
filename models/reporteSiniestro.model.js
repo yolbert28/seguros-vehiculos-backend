@@ -25,7 +25,7 @@ export default class ReporteSiniestroModel {
     const { cliente_doc, descripcion, direccion, fecha } = reporteSiniestro;
     try {
       const result = await turso.execute(
-        "INSERT INTO reporte_siniestro (cliente_doc, descripcion, direccion, fecha, atendido) VALUES (?, ?, ?, ?, 2) RETURNING *;",
+        "INSERT INTO reporte_siniestro (cliente_doc, descripcion, direccion, fecha, atendido) VALUES (?, ?, ?, ?, 1) RETURNING *;",
         [cliente_doc, descripcion, direccion, fecha]
       );
       return { success: true, data: result.rows[0] };
