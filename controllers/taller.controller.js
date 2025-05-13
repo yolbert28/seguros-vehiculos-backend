@@ -17,7 +17,10 @@ export default class TallerController {
     const { rif } = req.params;
     const taller = await this.tallerModel.getById(rif);
 
-    res.json(taller);
+    if(taller)
+      return res.json(taller);
+
+    res.json({});
   }
 
   getByName = async (req, res) => {
