@@ -7,17 +7,17 @@ export default class ReporteSiniestroModel {
   }
 
   static async getById(id) {
-    const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE id = ?", [id]);
+    const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido AND rs.id = ?", [id]);
     return result.rows[0];
   }
 
   static async getByNotAtendido() {
-    const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE atendido = 2 ORDER BY id DESC");
+    const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido AND rs.atendido = 1 AND rs.atendido = 2 ORDER BY id DESC");
     return result.rows;
   }
 
   static async getByCliente(documento) {
-    const result = await turso.execute("SELECT * FROM reporte_siniestro WHERE cliente_doc = ?", [documento]);
+    const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido AND rs.cliente_doc = ?", [documento]);
     return result.rows;
   }
 
