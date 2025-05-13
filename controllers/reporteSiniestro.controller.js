@@ -24,6 +24,18 @@ export default class ReporteSiniestroController {
       res.json({})
   }
 
+  getByNotAtendidoAndId =  async (req, res) => {
+    const { id } = req.params;
+
+    const reporte = await this.reporteSiniestroModel.getByNotAtendidoAndId(id);
+
+    if(reporte)
+      res.json(reporte);
+    else
+      res.json({})
+  }
+
+
   getByCliente = async (req, res) => {
     const { documento } = req.params;
 

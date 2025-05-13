@@ -9,6 +9,7 @@ export default function createReporteSiniestroRouter({ reporteSiniestroModel, cl
   route.get("/", reporteSiniestroController.getAll);
   route.get("/:id", reporteSiniestroController.getById);
   route.get("/client/:documento", reporteSiniestroController.getByCliente);
+  route.get("/notAttended/:id", reporteSiniestroController.getByNotAtendidoAndId);
   route.post("/", reporteSiniestroController.create);
   route.put("/:id", reporteSiniestroController.update);
   route.delete("/:id", reporteSiniestroController.delete);

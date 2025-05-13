@@ -16,6 +16,11 @@ export default class ReporteSiniestroModel {
     return result.rows;
   }
 
+  static async getByNotAtendidoAndId(id) {
+    const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido AND (rs.atendido = 1 OR rs.atendido = 2) AND rs.id = ? ORDER BY id DESC", [id]);
+    return result.rows;
+  }
+
   static async getByCliente(documento) {
     const result = await turso.execute("SELECT rs.*, a.nombre as nombre_atendido FROM reporte_siniestro rs, atendido a WHERE a.id = rs.atendido AND rs.cliente_doc = ?", [documento]);
     return result.rows;
