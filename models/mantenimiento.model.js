@@ -44,9 +44,7 @@ export default class MantenimientoModel {
   }
 
   static async create(mantenimiento) {
-    const { vehiculo_mat, taller_rif, descripcion } = mantenimiento;
-
-    const fecha = new Date().toISOString().slice(0, 10);
+    const { vehiculo_mat, taller_rif, descripcion, fecha } = mantenimiento;
 
     try {
       const result = await turso.execute("INSERT INTO mantenimiento (vehiculo_mat, taller_rif, descripcion, fecha) VALUES (?, ?, ?, ?) RETURNING *;", [vehiculo_mat, taller_rif, descripcion, fecha ]);
@@ -59,10 +57,10 @@ export default class MantenimientoModel {
   }
 
   static async update(id, mantenimiento) {
-    const { descripcion } = mantenimiento;
+    const { descripcion, fecha} = mantenimiento;
 
     try {
-      await turso.execute("UPDATE mantenimiento SET descripcion = ? WHERE id = ?", [descripcion, id]);
+      await turso.execute("UPDATE mantenimiento SET descripcion = ?, fecha = ? WHERE id = ?", [descripcion, fecha, id]);
 
       return true;
     } catch (error) {
