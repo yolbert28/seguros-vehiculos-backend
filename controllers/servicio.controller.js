@@ -18,7 +18,10 @@ export default class ServicioController {
 
     const result = await this.servicioModel.getById(id);
 
-    res.json(result);
+    if(result)
+      res.status(200).json(result);
+    else
+      res.json({})
   }
 
   create = async (req, res) => {

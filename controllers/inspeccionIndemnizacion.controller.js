@@ -20,9 +20,9 @@ export default class InspeccionIndemnizacionController {
     if (inspeccionIndemnizacion) {
       const empleado = await this.empleadoModel.getById(inspeccionIndemnizacion.inspector_doc);
       inspeccionIndemnizacion.inspector = empleado;
-    }
+      res.json(inspeccionIndemnizacion);
+    } else res.json({})
 
-    res.json(inspeccionIndemnizacion);
   }
 
   getByIndemnizacion = async (req, res) => {

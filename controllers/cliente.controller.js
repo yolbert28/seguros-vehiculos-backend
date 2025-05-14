@@ -26,12 +26,13 @@ export default class ClienteController {
 
     const reporteSiniestro = await this.reporteSiniestroModel.getByCliente(documento);
 
-    if (result){
+    if (result) {
       result.polizas = resultPolizas;
       result.reporteSiniestro = reporteSiniestro;
+      res.json(result);
     }
-
-    res.json(result);
+    else
+      res.json({})
   }
 
   getByEmail = async (req, res) => {
@@ -163,9 +164,11 @@ export default class ClienteController {
 
     const token = jwt.sign({ documento: documento }, "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAAeyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NDIwNDY2NzcsImlkIjoiM2I5YjUwMzUtMzFhZC00ZDdmLTg5MDAtOWVmMDZlYTgxNzMxIn0.kE72PyjobCFI1QL6BewEyyQ__yRtWRllCPlAbuNMDgr6pzwMcPrMKPhzk82eQgaDk1BO3p-jRCb8uIxh9WMtAA", { expiresIn: 14400 });
 
-    return res.status(200).json({ token, user:{
-      documento: user.documento, nombre: user.nombre, correo: user.correo, telefono: user.telefono, direccion: user.direccion
-    } });
+    return res.status(200).json({
+      token, user: {
+        documento: user.documento, nombre: user.nombre, correo: user.correo, telefono: user.telefono, direccion: user.direccion
+      }
+    });
   }
 
   changePassword = async (req, res) => {

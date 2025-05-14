@@ -18,7 +18,10 @@ export default class ModeloController {
 
     const modelo = await this.modeloModel.getById(id);
 
-    res.json(modelo);
+    if(modelo)
+      res.json(modelo);
+    else
+      res.json({})
   }
 
   getByMarca = async (req, res) => {

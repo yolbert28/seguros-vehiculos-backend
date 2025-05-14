@@ -17,7 +17,10 @@ export default class EvidenciaController {
 
     const evidencia = await this.evidenciaModel.getById(id);
 
-    res.json(evidencia);
+    if(evidencia)
+      res.json(evidencia);
+    else
+      res.json({})
   }
 
   getBySiniestro = async (req, res) => {

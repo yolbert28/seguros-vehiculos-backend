@@ -17,7 +17,11 @@ export default class CoberturaController {
 
     const result = await this.coberturaModel.getById(id);
 
-    res.json(result);
+    
+    if(result)
+      res.json(result);
+    else
+      res.json({})
   }
 
 

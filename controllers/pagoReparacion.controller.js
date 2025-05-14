@@ -16,7 +16,10 @@ export default class PagoReparacionController {
     const { id } = req.params;
     const pagoReparacion = await this.pagoReparacionModel.getById(id);
 
-    res.json(pagoReparacion);
+    if(pagoReparacion)
+      res.json(pagoReparacion);
+    else
+      res.json({})
   }
 
   getByReparacion = async (req, res) => {

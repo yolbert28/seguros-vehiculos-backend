@@ -17,7 +17,10 @@ export default class PrimaController {
 
     const result = await this.primaModel.getById(id);
 
-    return res.status(200).json(result);
+    if(result)
+      res.status(200).json(result);
+    else
+      res.json({})
   }
 
   create = async (req, res) => {

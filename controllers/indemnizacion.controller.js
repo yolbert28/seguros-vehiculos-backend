@@ -24,9 +24,9 @@ export default class IndemnizacionController {
     if (indemnizacion) {
       indemnizacion.inspeccionIndemnizacion = inspeccionIndemnizacion;
       indemnizacion.reparaciones = reparaciones;
-    }
+      res.json(indemnizacion);
+    } else res.json({});
 
-    res.json(indemnizacion);
   }
 
   getBySiniestroId = async (req, res) => {

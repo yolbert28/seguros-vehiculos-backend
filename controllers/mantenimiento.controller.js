@@ -22,9 +22,9 @@ export default class MantenimientoController {
       const taller = await this.tallerModel.getById(mantenimiento.taller_rif);
 
       mantenimiento.taller = taller;
-    }
+      res.json(mantenimiento);
+    } else res.json({})
 
-    res.json(mantenimiento);
   }
 
   getByVehiculo = async (req, res) => {

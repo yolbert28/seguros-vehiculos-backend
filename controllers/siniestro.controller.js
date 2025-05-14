@@ -35,9 +35,9 @@ export default class SiniestroController {
       siniestro.evidencias = evidencias;
       siniestro.inspeccionSiniestro = inspeccionSiniestro;
       siniestro.indemnizacion = indemnizacion;
-    }
+      res.json(siniestro);
+    } else res.json({})
 
-    res.json(siniestro);
   }
 
   getByVehiculo = async (req, res) => {

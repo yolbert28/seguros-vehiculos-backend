@@ -22,7 +22,10 @@ export default class EmpleadoController {
 
     const result = await this.empleadoModel.getById(documento);
 
-    return res.json(result);
+    if(result)
+      res.json(result);
+    else
+      res.json({})
   }
 
   getReportByMonth = async (req, res) => {

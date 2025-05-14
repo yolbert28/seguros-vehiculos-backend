@@ -19,10 +19,10 @@ export default class MarcaController {
 
     const resultModel = await this.modeloModel.getByMarca(id);
 
-    if(marca)
+    if (marca) {
       marca.modelos = resultModel;
-
-    res.status(200).json(marca);
+      res.status(200).json(marca);
+    } else res.json({})
   };
 
   create = async (req, res) => {

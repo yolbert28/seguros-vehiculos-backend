@@ -24,9 +24,9 @@ export default class InspeccionSiniestroController {
 
       inspeccionSiniestro.inspector = empleado;
       inspeccionSiniestro.repuestos = repuestosSiniestro;
-    }
+      res.json(inspeccionSiniestro);
+    } else res.json({})
 
-    res.json(inspeccionSiniestro);
   }
 
   getBySiniestroId = async (req, res) => {

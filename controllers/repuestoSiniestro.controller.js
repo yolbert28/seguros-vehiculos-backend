@@ -16,7 +16,10 @@ export default class RepuestoSiniestroController {
     const { id } = req.params;
     const result = await this.repuestoSiniestroModel.getById(id);
 
-    return res.status(200).json(result);
+    if(result)
+      res.status(200).json(result);
+    else
+      res.json({})
   }
 
   getByInspeccion = async (req, res) => {

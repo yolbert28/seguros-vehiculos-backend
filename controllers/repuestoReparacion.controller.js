@@ -16,7 +16,10 @@ export default class RepuestoReparacionController {
     const { id } = req.params;
     const result = await this.repuestoReparacionModel.getById(id);
 
-    res.json(result);
+    if(result)
+      res.status(200).json(result);
+    else
+      res.json({})
   }
 
   getByReparacion = async (req, res) => {

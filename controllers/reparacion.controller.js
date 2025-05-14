@@ -29,9 +29,9 @@ export default class ReparacionController {
       reparacion.repuestos = repuestos;
       reparacion.pagos = pagos;
       reparacion.taller = taller;
-    }
+      res.json(reparacion);
+    } else res.json({})
 
-    res.json(reparacion);
   }
 
   getByTaller = async (req, res) => {
@@ -51,8 +51,8 @@ export default class ReparacionController {
   create = async (req, res) => {
     const newReparacion = validateReparacion(req.body);
 
-    if(!newReparacion.success){
-      return res.status(400).json({error: newReparacion.error});
+    if (!newReparacion.success) {
+      return res.status(400).json({ error: newReparacion.error });
     }
 
     const indemnizacionExist = await this.indemnizacionModel.getById(newReparacion.data.indemnizacion_id);
@@ -81,7 +81,8 @@ export default class ReparacionController {
     const reparacion = validatePartialReparacion(req.body);
 
     if (!reparacion.success) {
-      return res.status(400).json({ error: reparacion.error
+      return res.status(400).json({
+        error: reparacion.error
       });
     }
 
@@ -99,13 +100,13 @@ export default class ReparacionController {
 
     const pagoReparacionExist = await this.pagoReparacionModel.getByReparacion(id)
 
-    if(pagoReparacionExist.length > 0)
-      return res.status(400).json({success: false, error: "La reparacion tiene pagos asociados"})
+    if (pagoReparacionExist.length > 0)
+      return res.status(400).json({ success: false, error: "La reparacion tiene pagos asociados" })
 
     const repuestoReparacionExist = await this.repuestoReparacionModel.getByReparacion(id)
 
-    if(repuestoReparacionExist.length > 0)
-      return res.status(400).json({success: false, error:"La reparacion tiene repuestos asociados"})
+    if (repuestoReparacionExist.length > 0)
+      return res.status(400).json({ success: false, error: "La reparacion tiene repuestos asociados" })
 
     const result = await this.reparacionModel.delete(id);
 
