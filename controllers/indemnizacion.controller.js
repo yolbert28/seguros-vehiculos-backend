@@ -18,10 +18,10 @@ export default class IndemnizacionController {
     const { id } = req.params;
     const indemnizacion = await this.indemnizacionModel.getById(id);
 
-    const inspeccionIndemnizacion = await this.inspeccionIndemnizacionModel.getByIndemnizacion(id);
-    const reparaciones = await this.reparacionModel.getByIndemnizacion(id);
 
     if (indemnizacion) {
+      const inspeccionIndemnizacion = await this.inspeccionIndemnizacionModel.getByIndemnizacion(id);
+      const reparaciones = await this.reparacionModel.getByIndemnizacion(id);
       indemnizacion.inspeccionIndemnizacion = inspeccionIndemnizacion;
       indemnizacion.reparaciones = reparaciones;
       res.json(indemnizacion);

@@ -22,11 +22,11 @@ export default class ClienteController {
 
     const result = await this.clienteModel.getById(documento);
 
-    const resultPolizas = await this.polizaModel.getByCliente(documento);
-
-    const reporteSiniestro = await this.reporteSiniestroModel.getByCliente(documento);
-
     if (result) {
+
+      const resultPolizas = await this.polizaModel.getByCliente(documento);
+
+      const reporteSiniestro = await this.reporteSiniestroModel.getByCliente(documento);
       result.polizas = resultPolizas;
       result.reporteSiniestro = reporteSiniestro;
       res.json(result);
