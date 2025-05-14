@@ -18,6 +18,15 @@ export default class CoberturaPolizaModel {
     return result.rows;
   }
 
+  
+  static async getByCobertura (id) {
+    const result = await turso.execute("SELECT * FROM cobertura_poliza WHERE cobertura_id = ?",
+      [id]
+    )
+
+    return result.rows;
+  }
+
   static async create(coberturaPoliza) {
 
     const { cobertura_id, poliza_id } = coberturaPoliza;
