@@ -2,7 +2,7 @@ import z from "zod";
 
 const inspeccionIndemnizacionSchema = z.object({
   indemnizacion_id: z.number().int().positive(),
-  inspector_doc: z.string().min(5).max(255),
+  inspector_doc: z.string().min(7).max(11),
   descripcion: z.string().min(5).max(450),
   fecha: z.string().date()
 })

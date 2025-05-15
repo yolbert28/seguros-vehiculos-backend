@@ -14,7 +14,7 @@ export default class EmpleadoModel {
   }
 
   static async getContrasena(documento) {
-    const result = await turso.execute("SELECT contrasena FROM empleado WHERE documento = ?", [documento]);
+    const result = await turso.execute("SELECT contrasena, te.nombre as tipo_empleado FROM empleado e, tipo_empleado te  WHERE e.tipo_empleado_id = te.id AND e.documento = ?", [documento]);
 
     return result.rows[0];
   }
