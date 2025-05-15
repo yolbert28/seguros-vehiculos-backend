@@ -8,13 +8,13 @@ export default class EmpleadoModel {
   }
 
   static async getById(documento) {
-    const result = await turso.execute("SELECT documento, nombre, correo, telefono, tipo_empleado_id FROM empleado WHERE documento = ?", [documento]);
+    const result = await turso.execute("SELECT e.documento, e.nombre, e.correo, e.telefono, e.tipo_empleado_id, te.nombre as tipo_empleado FROM empleado e, tipo_empleado te WHERE e.tipo_empleado_id = te.id AND documento = ?", [documento]);
 
     return result.rows[0];
   }
 
   static async getContrasena(documento) {
-    const result = await turso.execute("SELECT e.documento, e.nombre, e.contrasena, te.nombre as tipo_empleado FROM empleado e, tipo_empleado te  WHERE e.tipo_empleado_id = te.id AND e.documento = ?", [documento]);
+    const result = await turso.execute("SELECT contrasena FROM empleado WHERE documento = ?", [documento]);
 
     return result.rows[0];
   }
